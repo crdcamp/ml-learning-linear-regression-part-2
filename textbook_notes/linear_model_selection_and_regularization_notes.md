@@ -80,4 +80,30 @@ The best subset selection approaches generally give similar, but not identical, 
 
 # Choosing the Optimal Model
 
-Best subset selection, forward selection, and backward selection result in the creation of a set of models, each of which contains a subset of the *p* predictors. To apply these methods, we need a way to determine which of these models is *best*.
+Best subset selection, forward selection, and backward selection result in the creation of a set of models, each of which contains a subset of the *p* predictors. To apply these methods, we need a way to determine which of these models is *best*. As discussed previously, **the model containing all the predictors will always have the smallest RSS and the largest r-squared**, since these quantities are **related to the training error**. It's evident that the training error can be a poor estimate of the test error.
+
+Therefore, **RSS and r-squared are not suitable for selecting the best model among a collection of models with different numbers of predictors**. In order to select the best model with respect to the test error, we need to estimate this test error. There are two common approaches:
+1. We can indirectly estimate the test error by making an *adjustment* to the training error to account for the bias due to overfitting.
+1. We can *directly* estimate the test error, using either a validation set approach or a cross-validation approach (we'll get to that later).
+
+# Cp, AIC, BIC, and Adjusted R2
+
+It was shown in Chapter 2 that the training set MSE is generally an **underestimate** of the test MSE (MSE = RSS/n). This is because when we fit a model to the training data using least squares, we specifically estimate the regression coefficients such that the training RSS (not the test RSS) is as small as possible. In particular, the training error will decrease as more variables are included in the model, but the test error might not. Therefore, **training set RSS and training set r-squared cannot be used to select from among a set of models with different numbers of variables**.
+
+A number of techniques for adjusting the training error for the model size are available. We'll consider four such approaches.
+
+## Cp
+
+For a fitted least squares model containing *d* predictors, the Cp estimate of test MSE is computed using the following equation:
+
+![Alt images](../images/Cp_formula.png)
+
+where `std_hat**2` is an estimate of the variance of the error term associated with each response measurement in the following table:
+
+![Alt image](../images/subset_table.png)
+
+Typically, `std_hat**2` is estimated using the full model containing all predictors. Essentially, **the Cp statistics adds a penalty of `2dˆσ**2` to the training RSS in order to adjust for the fact that the training error tends to underestimate the test error**. The penalty increases as the number of predictors in the model increases; this is intended to adjust for the corresponding decrease in the training RSS. The Cp statistic tends to take on a small value for models with a low test error, so **when determining which of a set of models is best, we choose the model with the lowest Cp value**.
+
+## AIC
+
+The AIC criterion is defined for a large class of models fit by maximum likelihood. In the case of the `Credit` model we're referencing, 
