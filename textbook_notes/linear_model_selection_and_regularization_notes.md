@@ -106,4 +106,34 @@ Typically, `std_hat**2` is estimated using the full model containing all predict
 
 ## AIC
 
-The AIC criterion is defined for a large class of models fit by maximum likelihood. In the case of the `Credit` model we're referencing, 
+The AIC criterion is defined for a large class of models fit by maximum likelihood. In the case of the `Credit` model with Gaussian errors, maximum likelihood and least squares are the same thing. In this case AIC is given by:
+
+![Alt image](../images/AIC_formula.png)
+
+where, for simplicity, we have omitted irrelevant constants. Cp and AIC are proportional to each other.
+
+## BIC
+
+BIC is derived from a Bayesian point of view, but ends up looking similar to Cp (and AIC) as well. For the least squares model with *d* predictors, the BIC is, up to irrelevant constants, given by:
+
+![Alt image](../images/BIC_formula.png)
+
+Like Cp, the BIC will tend to take on a small value for a model with a low test error, and so **generally we select the model that has the lowest BIC value**. Notice that BIC replaces the penalty found in Cp with different values. Since log *n* > 2 for any *n* >7, **the BIC statistic generally places a heavier penalty on models with many variables, and hence results in the selection of smaller models than Cp**. We can see this in the following example of the `Credit` dataset:
+
+![Alt image](../images/adjustment_method_tradeoffs.png)
+
+**To summarize:**
+
+Use BIC when:
+* You want a simple, interpretable model.
+* You believe the true relationship involves few predictors.
+* Sample size is large.
+* You're doing explanatory modeling (understanding relationships)
+
+Use AIC when:
+* Prediction accuracy is your main goal.
+* You suspect many weak effects matter.
+* Sample size is small to moderate.
+* You're doing predictive modeling.
+
+**Rule of thumb:** BIC for explanation, AIC for prediction.
