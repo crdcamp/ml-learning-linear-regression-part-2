@@ -44,11 +44,11 @@ Although we have presented best subset selection here for least squares regressi
 
 While best subset selection is a simple and conceptually appealing approach, it clearly suffers from computational limitations. You're taking all possible combinations of how to approach the data analysis and it gets increasingly demanding as you add predictors. Consequently, **best subset selection becomes computationally infeasible for values of *p* grater than around 40**.
 
-# Stepwise Selection
+## Stepwise Selection
 
 Stepwise selection methods explore a far more restricted set of models, and are attractive alternatives to best subset selection.
 
-## Forward Stepwise Selection
+### Forward Stepwise Selection
 
 **Forward stepwise selection** is a computationally efficient alternative to best subset selection. Instead of considering all `2**p` possible models containing subsets of the *p* predictors, forward stepwise considers a much smaller set of models.
 
@@ -56,4 +56,53 @@ It begins with a model containing no predictors, and then adds predictors to the
 
 ![Alt image](../images/stepwise_selection.png)
 
-Unlike best subset selection, which involved fitting 
+Unlike best subset selection, which involved fitting `2**p` models, forward stepwise selection involves fitting one null model, along with *p* - *k* models in the *k*th iteration. This provide a substantial difference. For example, when *p* = 20, best subset selection requires fitting 1,048,576 models, whereas forward stepwise selection requires fitting only 211 models.
+
+In Step 2(b) of the previous algorithm, we must identify the best model from among those *p* - *k* that augment *Mk* with one additional predictor. We can do this by simply choosing the model with the lowest RSS or the highest R-squared. However, in Step 3, we must identify the best model among a set of models with different numbers of variables, which is more challenging.
+
+**Though forward stepwise tends to do well in practice, it's not guaranteed to find the best possible model out of all `2**p` models containing subsets of the *p* predictors. 
+
+Forward stepwise selection can be applied even in the high-dimensional setting where *n* < *p*; however, in this case, it's possible to construct submodels only, since each submodel is fit using least squares, which will not yield a unique solution if *p* >= *n*.
+
+### Backward Stepwise Selection
+
+Like forward stepwise selection, backward stepwise selection provides an efficient alternative to best subset selection. However, unlike forward stepwise selection, it begins with the full least squares model containing all *p* predictors, and then iteratively removes the least useful predictor one-at-a-tine. Here's the algorithm for it:
+
+![Alt image](../images/backward_stepwise_selection.png)
+
+**Backward stepwise selection can be applied in settings where p is too large to apply to best subset selection**. Also like forward stepwise selection, backward stepwise selection is not guaranteed to yield the best model containing a subset of the *p* predictors.
+
+**Backward selection requires that the number of samples n is larger than the number of variables p** (so that the full model can be fit). In contrast, forward stepwise can be used even when n < p, and so is the only viable subset method when p is very large.
+
+## Hybrid Approaches
+
+The best subset selection approaches generally give similar, but not identical, models. Hybrid versions of forward and backward stepwise selection are available, in which variables are added to the model sequentially, in analogy to forward selection. However, after adding each new variable, the method may also remove any variables that no longer provide an improvements in the model fit. Such an approach attempts to more closely mimic best subset selection while retaining the computational advantages of forward and backward stepwise selection.
+
+# Review of Subset Selections
+
+Let's recap what we've covered so far to gain a more concrete understanding.
+
+So we have these various subset selection methods, all of which have the aim to derive the most meaningful combination of coefficients/features. That's easy to understand, but let's tackle the more complex problem of how *n* and *p* relate to these concepts.
+
+## *n* versus *p*
+
+*n* is the number of observations, while *p* is the number of variables.
+
+### Prediction Accuracy
+
+Provided that the true relationship is linear, the least squares estimates will have low bias. This is because if you repeated the estimation process many times with different samples from the same population, the average of all your estimates would equal the true parameter values. That's what zero bias means - no systematic error, just random variation around the correct answer.
+
+If *n* is much greater than *p*, then the lease squares estimates tend to also have low variance and will perform well on test observations.
+
+This statement explores the bias variance tradeoff we briefly explored some time ago. When *n* is much greater than *p*, you have many more observations than parameters to estimate. This gives you several advantages:
+* **More data to average over:** Variance comes from random sampling noise in your data. With many observations, the random errors tend to cancel each other out when you're fitting the line, leading to more stable parameter estimates.
+* **High degrees of freedom:** You have n-p degrees of freedom for estimating the error variance. This is because each parameter you estimate "consumes" one degree of freedom. For example:
+    * When you estimate the intercept, you're forcing the line to pass through a specific point.
+    * When you estimate the slope, you're constraining the line's angle.
+    * An so on for each additional parameter.
+
+    So out of your *n* total observations, *p* of them are essentially "used up" in determining the parameter values. You're left with n-p degrees of freedom to estimate how much the data varies around your fitted model.
+
+    This isn't dependent on n being much larger than p either-it's always n-p. The larger n-p is, the more "leftover" information you have to reliably estimate how noisy your data is, making the estimation process more stable.
+* **Mathematical relationship:** The variance of least squares estimates is proportional to std**2/n. More observations directly reduces the variance.
+
