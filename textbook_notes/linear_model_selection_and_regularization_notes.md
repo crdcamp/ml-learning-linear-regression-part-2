@@ -78,31 +78,6 @@ Like forward stepwise selection, backward stepwise selection provides an efficie
 
 The best subset selection approaches generally give similar, but not identical, models. Hybrid versions of forward and backward stepwise selection are available, in which variables are added to the model sequentially, in analogy to forward selection. However, after adding each new variable, the method may also remove any variables that no longer provide an improvements in the model fit. Such an approach attempts to more closely mimic best subset selection while retaining the computational advantages of forward and backward stepwise selection.
 
-# Review of Subset Selections
+# Choosing the Optimal Model
 
-Let's recap what we've covered so far to gain a more concrete understanding.
-
-So we have these various subset selection methods, all of which have the aim to derive the most meaningful combination of coefficients/features. That's easy to understand, but let's tackle the more complex problem of how *n* and *p* relate to these concepts.
-
-## *n* versus *p*
-
-*n* is the number of observations, while *p* is the number of variables.
-
-### Prediction Accuracy
-
-Provided that the true relationship is linear, the least squares estimates will have low bias. This is because if you repeated the estimation process many times with different samples from the same population, the average of all your estimates would equal the true parameter values. That's what zero bias means - no systematic error, just random variation around the correct answer.
-
-If *n* is much greater than *p*, then the lease squares estimates tend to also have low variance and will perform well on test observations.
-
-This statement explores the bias variance tradeoff we briefly explored some time ago. When *n* is much greater than *p*, you have many more observations than parameters to estimate. This gives you several advantages:
-* **More data to average over:** Variance comes from random sampling noise in your data. With many observations, the random errors tend to cancel each other out when you're fitting the line, leading to more stable parameter estimates.
-* **High degrees of freedom:** You have n-p degrees of freedom for estimating the error variance. This is because each parameter you estimate "consumes" one degree of freedom. For example:
-    * When you estimate the intercept, you're forcing the line to pass through a specific point.
-    * When you estimate the slope, you're constraining the line's angle.
-    * An so on for each additional parameter.
-
-    So out of your *n* total observations, *p* of them are essentially "used up" in determining the parameter values. You're left with n-p degrees of freedom to estimate how much the data varies around your fitted model.
-
-    This isn't dependent on n being much larger than p either-it's always n-p. The larger n-p is, the more "leftover" information you have to reliably estimate how noisy your data is, making the estimation process more stable.
-* **Mathematical relationship:** The variance of least squares estimates is proportional to std**2/n. More observations directly reduces the variance.
-
+Best subset selection, forward selection, and backward selection result in the creation of a set of models, each of which contains a subset of the *p* predictors. To apply these methods, we need a way to determine which of these models is *best*.
