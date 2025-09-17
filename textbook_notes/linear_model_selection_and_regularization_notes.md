@@ -137,3 +137,23 @@ Use AIC when:
 * You're doing predictive modeling.
 
 **Rule of thumb:** BIC for explanation, AIC for prediction.
+
+## Adjusted R-squared
+
+The adjusted R-squared statistic is usually defined as 1 - RSS/TSS (total sum of squares). Since RSS always decreases as more variables are added to the model, the R-squared always increases as more variables are added. For a least squares model with *d* variables, the adjusted R-squared statistic is calculated as:
+
+![Alt image](../images/adjusted_r_squared_formula.png)
+
+Unlike Cp, AIC, and BIC, for which a small value indicates a model with a low test error, a large value of adjusted R-squared indicates a model with a small test error. Maximizing the adjusted R-squared is equivalent to minimizing `RSS/(n-d-1)`. While RSS always decreases as the number of variables in the model increases, `RSS/(n-d-1)` may increase or decrease, due to the presence of *d* in the denominator.
+
+The intuition behind the adjusted R-squared is that once all of the correct variables have been included in the model, adding additional noise variables will lead to only a very small decrease in RSS. Since adding noise variables leads to an increase in *d*, such variables will lead to an increase in `RSS/(n-d-1)`, and consequently a decrease in the adjusted R-squared. Therefore, in theory, the model with the largest adjusted R-squared will have only correct variables and no noise variables. Unlike the R-squared statistic, **the adjusted R-squared statistic pays a price for the inclusion of unnecessary variables in the model.
+
+**Reminder:** *d* is the number of predictors.
+
+**Despite its popularity, the adjusted R-squared is not as well motivated in statistical theory as AIC, BIC, and Cp. All of these measures are simple to use and compute. Here we have presented their formulas in the case of a linear model fit using least squares; however, AIC and BIC can also be defined for more general types of models.**
+
+# Validation and Cross-Validation
+
+As an alternative to the approaches just discussed, we can directly estimate the test error using the validation set and cross-validation methods discussed in Chapter 5. We can compute the validation set error or the cross-validation error for each model under consideration.
+
+**Go over cross validation, then return here (page 247)**.
