@@ -156,4 +156,6 @@ The intuition behind the adjusted R-squared is that once all of the correct vari
 
 As an alternative to the approaches just discussed, we can directly estimate the test error using the validation set and cross-validation methods discussed in Chapter 5. We can compute the validation set error or the cross-validation error for each model under consideration.
 
-**Go over cross validation, then return here (page 247)**.
+**Refer to `resampling_methods.md` before continuing these notes.
+
+**Resume here at (page 247)**.
