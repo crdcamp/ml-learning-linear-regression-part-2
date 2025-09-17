@@ -60,4 +60,28 @@ LOOCV is a very general method, and can be used with any kind of predictive mode
 
 ## k-Fold Cross-Validation
 
-An 
+An alternative to LOOCV is k-fold CV. This approach involves randomly dividing the set of observations into *k* groups, or *folds*, of approximately equal size. The first fold is treated as a validation set, and the method is fit on the remaining *k* - 1 folds. The mean squared error, MSE1, is then computed on the observations in the held-out fold. This procedure is repeated *k* times, each time, a different group of observations is treated as a validation set. This process results in *k* estimates of the test error, MSE1, MSE2,...., MSEk. The *k*-fold CV estimate is computed by averaging these values,
+
+![Alt image](../images/k_fold_formula.png)
+
+LOOCV is a special case of *k*-fold CV in which *k* is set to equal *n*. **In practice, one typically performs *k*-fold CV using *k* = 5 or *k* = 10**.
+
+The right hand panel below displays nine different 10-fold CV estimates for the `Auto` dataset, each resulting from a different random split of the observations into ten folds.
+
+![Alt image](../images/10_fold_k_cv.png)
+
+As we can see, there is a much lower variability in these results compared to LOOCV. 
+
+When we perform cross-validation, our goal might be to determine how well a given statistical learning procedure can be expected to perform on independent data. But, at other times we're only interested in the location of the minimum point in the estimated test MSE curve. This is because **we might be performing cross-validation on a number of statistical learning methods, or on a single method using different levels of flexibility, in order to identify the methods that results in the lowest test error. For this reason, the location of the minimum point in the estimated test MSE curve is important, but the actual value of the estimated test MSE is not**.
+
+## Bias-Variance Trade-Off for *k*-Fold Cross Validation
+
+We mentioned in a previous section that *k*-fold CV with k < n has a computational advantage to LOOCV. A less obvious advantage but potentially more important advantage of *k*-fold CV is that it often gives more accurate estimates of the test error rate than does LOOCV. This has to do with a bias-variance trad-off.
+
+It was mentioned earlier that the validation set approach can lead to overestimates of the test error rate, since in this approach the training set used to fit the statistical learning method contains only half the observations of the entire data set. Using LOOCV gives approximately unbiased estimates of the test error, while *k*-fold is said to have an intermediate level of bias, since each training set contains fewer than in the LOOCV approach, but substantially more than the validation set approach. Therefore, **from the perspective of bias reduction, LOOCV is to preferred to k-fold CV**.
+
+However, we know that bias is not the only source for concern in estimating procedure; we must also consider the procedure's variance. It turns out that **LOOCV has a higher variance than does *k*-fold CV with *k* < *n***. 
+
+Why is this the case? When we perform LOOCV, we are in effect averaging the outputs of *n* fitted models, each of which is trained on an almost identical set of observations; therefore, these outputs are highly (positively) correlated with each other. In contrast, when we perform *k*-fold CV with *k* < *n*, we are averaging the outputs of *k* fitted models that are somewhat less correlated with each other, since the overlap between the training sets in each model is smaller. Since the mean of many highly correlated quantities has higher variance than does the mean of many quantities that are not as highly correlated, the test error estimate resulting from LOOCV tends to have higher variance than does the test error estimate resulting from the *k*-fold CV.
+
+**Note:** The textbook then continues onto cross-validation on classification problems, but we'll revisit that once linear regression is complete (page 216).
