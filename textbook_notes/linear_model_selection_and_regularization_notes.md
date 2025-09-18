@@ -4,13 +4,13 @@ As you only recently learned, the linear model has distinct advantages in terms 
 
 Why might we want to use another fitting procedure instead of least squares? Well let me tell ya son, alternative fitting procedures can yield better prediction accuracy and model interpretability.
 
-* **Prediction Accuracy:** Provided you're actually dealing with a linear problem, the least squares estimate will have a low bias. If n >>, that is, if n, the number of observations, is much larger than p, the number of variables, then the least least squares estimates tend to have low variance, and will perform well on test observations. However, if n is not much larger than p, then there can be a lot of variability in the least squares fit, resulting in overfitting and consequently poor predictions on future observations not used in model training. And if p > n, then there is no longer a unique least squares coefficient estimate: there are infinitely many solutions. Each of these least squares solutions gives zero error on the training data, but typically very poor test set performance due to extremely high variance. By **constraining** or **shrinking** the estimated coefficients, we can often substantially **reduce the variance at the cost of a negligible increase in bias**.
+* **Prediction Accuracy:** Provided you're actually dealing with a linear problem, the least squares estimate will have a low bias. If n >> p, that is, if n, the number of observations, is much larger than p, the number of variables, then the least least squares estimates tend to have low variance, and will perform well on test observations. However, if n is not much larger than p, then there can be a lot of variability in the least squares fit, resulting in overfitting and consequently poor predictions on future observations not used in model training. And if p > n, then there is no longer a unique least squares coefficient estimate: there are infinitely many solutions. Each of these least squares solutions gives zero error on the training data, but typically very poor test set performance due to extremely high variance. By **constraining** or **shrinking** the estimated coefficients, we can often substantially **reduce the variance at the cost of a negligible increase in bias**.
 
 * **Model Interpretability:** It's often the case that some or many of the variables used in a multiple regression model are in fact not associated with the response. Including such irrelevant variables leads to unnecessary complexity in the resulting model, By removing these variables-that is, by setting the corresponding coefficient estimates to zero-we can obtain a model that's more easily interpreted. Now least squares is extremely unlikely to yield any coefficient estimates that are exactly zero.
 
 There are many alternatives, both classical and modern, to using least squares to fit. In this chapter, we discuss three important classes of methods:
 
-* **Subset Selection:** This approach involves identifying a subset of the *p* predictors that we believe to be related to the response. We then fit a model using least squares on the reduces set of variables.
+* **Subset Selection:** This approach involves identifying a subset of the *p* predictors that we believe to be related to the response. We then fit a model using least squares on the reduced set of variables.
 
 * **Shrinkage:** This approach involves fitting a model involving all *p* predictors. However, the estimated coefficients ar shrunken towards zero relative to the least squares estimates. This shrinkage (also known as **regularization**) has the effect of reducing variance. Depending on what type of shrinkage is performed, some of the coefficients may be estimated to be exactly zero. Hence, shrinkage methods can also perform variable selection.
 
@@ -152,10 +152,44 @@ The intuition behind the adjusted R-squared is that once all of the correct vari
 
 **Despite its popularity, the adjusted R-squared is not as well motivated in statistical theory as AIC, BIC, and Cp. All of these measures are simple to use and compute. Here we have presented their formulas in the case of a linear model fit using least squares; however, AIC and BIC can also be defined for more general types of models.**
 
-# Validation and Cross-Validation
-
-As an alternative to the approaches just discussed, we can directly estimate the test error using the validation set and cross-validation methods discussed in Chapter 5. We can compute the validation set error or the cross-validation error for each model under consideration.
-
 **Refer to `resampling_methods.md` before continuing these notes.
 
-**Resume here at (page 247)**.
+Once that's complete, we'll resume here (page 247).
+
+# Validation and Cross-Validation
+
+Alright, welcome back to linear model selection and regularization soldier. Let's get to it.
+
+As an alternative to the approaches just discussed, we can directly estimate the test error using the validation set and cross-validation methods discussed in `resampling_methods.md`. 
+
+We can compute the validation set error or the cross-validation error for each model under consideration, and then select the model for which the resulting test error is smallest.
+
+![Alt image](../images/best_model_selection_graph.png)
+
+*For the `Credit` data set, three quantities are displayed for the best model containing d predictors, for d ranging from 1 to 11. The overall best model, based on each of these quantities, is shown as a blue cross.*
+
+This procedure has an advantage relative to AIC, BIC, Cp, and adjusted R-squared, in that it provides a direct estimate of the test error, and makes fewer assumptions about the true underlying model. It can also be used in a wider range of model selection tasks, even in cases where it's hard to pinpoint the model degrees of freedom (e.g. the number of predictors in the model) or hard to estimate the error variance `std**2`. 
+
+If we repeated the validation set approach using a different split of the data into a training and validation set, or if we repeated cross-validation using a different set of cross-validation folds, then the precise model with the lowest estimated test error would surely change. In this setting, we can select a model using the **one-standard-error rule**. 
+
+With the **one-standard-error rule** you must first calculate the standard error of the estimated test MSE for each model size, and then select the smallest model for which the estimated test error is within one standard error of the lowest point on the curve.
+
+The rationale here is that if a set of models appear to be more or less equally good, then we might as well choose the simplest model (the one with the least predictors).
+
+# Shrinkage Methods
+
+As an alternative to the previous methods, we can fit a model containing all *p* predictors using a technique that constrains or regularizes the coefficient estimates, or equivalently, that shrinks the coefficient estimates towards zero. Shrinking the coefficient estimates can significantly reduce their variance.
+
+## Ridge Regression
+
+Recall from Chapter that the least squares fitting procedure estimates the coefficients using the values that minimize
+
+ ![Alt image](../images/rss_formula_2.png)
+
+ Ridge regression is very similar to least squares, except that the coefficients are estimated by minimizing a slightly different quantity. In particular, the ridge regression coefficient estimates `Bhat**R` are the values that minimize
+
+ ![Alt image](../images/ridge_regression_formula_2.png)
+
+ Where λ ≥ 0 is a **tuning parameter**, to be determined separately. The above equation trades off two different criteria. As with least squares, ridge regression seeks coefficient estimates that fit the data well, by making the RSS small.
+
+ However, the second term, called a **shrinkage penalty**, is small when the coefficients are close to zero, and so it has the effect of shrinking the estimates of the coefficients towards zero. The tuning parameter serves to control the relative impact of these two terms on the regression coefficient estimates. When λ = 0, the penalty term has no effect, and ridge regression will produce the least squares estimates. 
