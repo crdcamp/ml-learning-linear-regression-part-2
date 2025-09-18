@@ -192,4 +192,21 @@ Recall from Chapter that the least squares fitting procedure estimates the coeff
 
  Where λ ≥ 0 is a **tuning parameter**, to be determined separately. The above equation trades off two different criteria. As with least squares, ridge regression seeks coefficient estimates that fit the data well, by making the RSS small.
 
- However, the second term, called a **shrinkage penalty**, is small when the coefficients are close to zero, and so it has the effect of shrinking the estimates of the coefficients towards zero. The tuning parameter serves to control the relative impact of these two terms on the regression coefficient estimates. When λ = 0, the penalty term has no effect, and ridge regression will produce the least squares estimates. 
+ However, the second term, called a **shrinkage penalty**, is small when the coefficients are close to zero, and so it has the effect of shrinking the estimates of the coefficients towards zero. The tuning parameter serves to control the relative impact of these two terms on the regression coefficient estimates. When λ = 0, the penalty term has no effect, and ridge regression will produce the least squares estimates. However, as λ approaches infinity, the impact of the shrinkage penalty grows, and the ridge regression coefficient estimates will approach zero.
+
+ Selecting a good value for λ is critical. This is something we'll dive into a bit later.
+
+### Why Does Ridge Regression Improve Over Least Squares?
+
+Ridge regression's advantage over least squares is rooted in the **bias-variance trade-off**. As λ increases, the flexibility of the ridge regression fit decreases, leading to decreased variance but increased bias. This is illustrated in the left hand panel below.
+
+![Alt image](../images/ridge_regression_display.png)
+
+*Squared bias (black), variance (green), test mean squared error (purple).*
+
+The green curve in the left-hand panel displays the variance of the ridge regression predictions as a function of λ. At the least squares coefficient estimates, which correspond to ridge regression with λ = 0, the variance is high but there is no bias. But as λ increases, the shrinkage of the ridge coefficient estimates leads to a substantial reduction in the variance of the predictions, at the expense of a slight increase in bias.
+
+**Ridge regression works best in situations where the least squares estimates have high variance.** Ridge regression also has substantial computational advantages over best subset selection.
+
+## The Lasso
+
