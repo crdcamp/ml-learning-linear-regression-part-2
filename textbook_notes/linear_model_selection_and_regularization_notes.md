@@ -210,3 +210,38 @@ The green curve in the left-hand panel displays the variance of the ridge regres
 
 ## The Lasso
 
+Ridge regression has an obvious disadvantage. Unlike best subset, forward stepwise, and backward stepwise selection, which generally select models that involve just a subset of the variables, ridge regression will include all *p* predictors in the final model. The penalty in the following equation will shrink all of the coefficients towards zero, but it will not set any of them exactly to zero. This may not be a problem for prediction accuracy, but it can create a challenge in model interpretation in settings in which the number of variables *p* is quite large.
+
+The **lasso** is a relatively recent alternative to ridge regression that overcomes this disadvantage. The lasso coefficients minimizes the quantity.
+
+![Alt image](../images/lasso_formula.png)
+
+The lasso and ridge regression have similar formulations. The only difference is that the `Betaj**2` term in the ridge regression penalty has been replaces by the absolute value of Vj in the lasso penalty.
+
+As with ridge regression, the lasso shrinks the coefficient estimates towards zero. However, in the case of the lasso, the penalty has the effect of forcing some of the coefficient estimates to be exactly zero when the tuning parameter is sufficiently large. Hence, much like best subset selection, the lasso performs *variable selection*. As a result, models generated from the lasso are generally much easier to interpret than those produced by ridge regression. We say that the **lasso yields sparse models-that is, models that involve only a subset of the variables**. As in ridge regression, selecting a good penalty value for the lasso is critical.
+
+## Another Formulation for Ridge Regression and the Lasso
+
+One can show that the lasso and ridge regression coefficient estiamtes solve tthe problems
+
+![Alt image](../images/lasso_and_ridge.png)
+
+respectively. In other words, for every value of λ, there is some *s* such that the above equations will give the same lasso coefficient estimates. Similarly, for every value of λ there is a corresponding *s* such that the equations will give the same ridge regression coefficient estimates.
+
+In other words, **for every value of λ, there's exactly one corresponding value of s that gives you the identical solution. They're just two different ways to write the same optimization problem.**
+
+In other *other* words, **for every choice of λ, there exists exactly one value of s that produces the identical solution, and vice versa. They're not optional parameters you add on - they're two different ways to control the same thing**.
+
+(Find more examples/explanations on page 254).
+
+## The Variable Selection Property of the Lasso
+
+Why is it that the lasso, unlike ridge regression, results in coefficient estimates that are exactly zero? The formulations (6.8) and (6.9) can be used to shed light on the issue. The following graph illustrates the situation.
+
+![Alt image](../images/vairable_selection_property_of_lasso.png)
+
+The least squares solution is marked as `B_hat`, while the blue diamond and circle represent the lasso and ridge regression constrains in (6.8) and (6.9), respectively. If *s* is sufficiently large, then the constraint regions will contain `B_hat`, and so the ridge regression and lasso estimates will be the same as the least squares estimates. However, in the above figure the least squares estimates lie outside of the diamond and the circle, and so the least squares estimates are not the same as the lasso and ridge regression estimates.
+
+Each of the ellipses centered around `Bhat` represents a *contour*: this means that all of the points on a particular ellipse have the same RSS value. As the ellipses expand away from the least squares coefficient estimates, the RSS increases. Equations (6.8) and (6.9) indicate that the lasso and ridge regression coefficient estimates are given by the first point at which the ellipse contacts the constraint region.
+
+
