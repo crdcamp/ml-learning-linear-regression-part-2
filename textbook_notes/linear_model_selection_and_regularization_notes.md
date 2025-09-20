@@ -244,4 +244,4 @@ The least squares solution is marked as `B_hat`, while the blue diamond and circ
 
 Each of the ellipses centered around `Bhat` represents a *contour*: this means that all of the points on a particular ellipse have the same RSS value. As the ellipses expand away from the least squares coefficient estimates, the RSS increases. Equations (6.8) and (6.9) indicate that the lasso and ridge regression coefficient estimates are given by the first point at which the ellipse contacts the constraint region.
 
-
+temp
