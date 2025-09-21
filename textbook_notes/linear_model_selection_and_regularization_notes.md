@@ -252,3 +252,19 @@ It's clear that the lasso has a major advantage over ridge regression, in that i
 
 *Left: Plots of squared bias (black), variance (green), and test MSE (purple) for the lasso on a simulated data set. Right: Comparison of squared bias, variance, and test MSE between lasso (solid) and ridge (dotted).
 
+The dotted lines represent the ridge regression fits. Here we plot both against their R-squared on the training data. In this example, the lasso and ridge regression result in almost identical biases. However, the variance of ridge regression is slightly lower than the variance of the lasso. Consequently, the minimum MSE of ridge regression is slightly smaller than that of the lasso.
+
+However, the data in the above graphs were generated in such a way that all 45 predictors were related to the response-that is, none of the true coefficients equaled zero. The lasso implicitly assumes that a number of the coefficients truly equal zero. Consequently, it's not surprising that ridge regression outperforms the lasso in terms of prediction error in this setting. 
+
+The following figure demonstrates a similar setting, except that now the response is a function of only 2 out of 45 predictors. Now the lasso tends to outperform ridge regression in terms of bias, variance, and MSE.
+
+![Alt image](../images/lasso_vs_ridge_2.png)
+
+**These two examples illustrate that neither ridge regression nor the lasso will universally dominate the other**. In general, one might expect the lasso to perform better in a setting where a relatively small number of predictors have substantial coefficients, and the remaining predictors have coefficients that are very small or equal to zero. Ridge regression will perform better when the response is a function of many predictors, all with coefficients of roughly equal size. However, the number of predictors that is related to the response is never known *a priori* for real data sets. A technique such as cross-validation can be used in order to determine which approach is better on a particular data set.
+
+**As with ridge regression, when the least squares estimates have excessively high variance, the lasso solution can yield a reduction in variance at the expense of a small increase in bias**, and consequently can generate more accurate predictions. Unlike ridge regression, the lasso performs variable selection, and hence results in models that are easier to interpret.
+
+There are very fitting algorithms for fitting both ridge and lasso models; in both cases the entire coefficient paths can be computed with about the same amount of work as a single least squares fit. We will explore this further in the lab at the end of the chapter.
+
+## A Simple Special Case for Ridge Regression and the Lasso
+
