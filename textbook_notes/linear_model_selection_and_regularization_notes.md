@@ -315,3 +315,10 @@ All of these methods are defined using the original predictors. We now explore a
 
 Let Z1, Z2..., ZM represent M < *p* **linear combinations** of our original *p* predictors. That is,
 
+![Alt image](../images/dim_reduction_1.png)
+
+For some constants φ1m, φ2m . . . , φpm, m = 1, . . . , M. We can then fit the linear regression model
+
+![Alt image](../images/dim_reduction_2.png)
+
+using least squares.
