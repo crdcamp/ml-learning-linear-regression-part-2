@@ -266,5 +266,26 @@ The following figure demonstrates a similar setting, except that now the respons
 
 There are very fitting algorithms for fitting both ridge and lasso models; in both cases the entire coefficient paths can be computed with about the same amount of work as a single least squares fit. We will explore this further in the lab at the end of the chapter.
 
-## A Simple Special Case for Ridge Regression and the Lasso
+**Find a special case for this on page 257.**
+
+# Bayesian Interpretation of Ridge Regression and the Lasso
+
+We now show that one can view ridge regression and the lasso through a Bayesian lens. A Bayesian viewpoint for regression assumes that the coefficient vector has some *prior* distribution, say p(B), where β = (β0, β1, . . . , βp)T. The likelihood of the data can be written as f (Y |X, β), (What it means:
+"The probability density of Y given specific values of X and β") where X = (X1, . . . , Xp). Multiplying the prior distribution by the likelihood gives us (up to a proportionality constant) the **posterior distribution**, which takes the form
+
+![Alt image](../images/bayes_formula_1.png)
+
+**Note:** The ∝ symbol means "proportional to" or "is proportional to."
+
+where the proportionality above follows from Bayes' theorem, and the equality above follows from the assumption that *X* is fixed.
+
+We assume the usual linear model, and suppose that the errors are independent and drawn from a normal distribution. Suppose that *g* is a density function. It turns out that ridge regression and the lasso follow naturally from two special cases of *g*:
+* If *g* is a Gaussian distribution with mean zero and standard deviation a function of λ, then it follows that the **posterior mode** for beta- that is, the most likely value for beta, given the data-is given by the ridge regression solution. In fact, the ridge regression solution is also the posterior mean.
+* If *g* is a double-exponential (Laplace) distribution with mean zero and scale parameter a function of λ, then it follows that the posterior mode for beta is the lasso solution. However, the lasso solution *is not* the posterior mean, and in fact, the posterior mean does not yield a sparse coefficient vector.
+
+From a Bayesian viewpoint, ridge regression and the lasso follow directly from assuming the usual linear model with normal errors, together with a simple prior distribution for beta. Below, notice that the lasso prior is steeply peaked at zero, while the Gaussian is flatter at zero. Hence, the lasso expects a priori that many of the coefficients are (exactly) zero, while ridge assumes the coefficients are randomly distributed about zero.
+
+![Alt image](../images/comparison.png)
+
+*Left: ridge regression is the posterior model for beta under a Gaussian prior. Right: The lasso is the posterior mode for beta under a double-exponential prior.*
 
