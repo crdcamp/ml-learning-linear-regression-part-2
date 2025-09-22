@@ -308,3 +308,10 @@ The following graph provides an illustration of ten-fold cross-validation applie
 The left-hand panel displays the cross-validation error, while the right-hand panel displays the coefficient estimates. The vertical dashed lines indicate the point at which the cross-validation error is smallest. The two colored lines in the right-hand panel represent the two predictors that are related to the response, while the grey lines represent the unrelated predictors; these are often referred to as **signal or noise variables**, respectively. Not only has the lasso correctly given much larger coefficient estimates to the two signal predictors, but also the minimum cross-validation error corresponds to a set of coefficient estimates for which only the signal variables are non-zero. Hence, cross-validation together with the lasso has correctly identified the two signal variables in the model.
 
 # Dimension Reduction Methods
+
+The methods that we have discussed so far in this chapter have controlled variance in two different ways, either by using a subset of the original variables, or by shrinking their coefficients towards zero.
+
+All of these methods are defined using the original predictors. We now explore a class of approaches that *transform* the predictors and then fit a least squares model using the transformed variables. We will refer to these techniques as **dimension reduction methods**.
+
+Let Z1, Z2..., ZM represent M < *p* **linear combinations** of our original *p* predictors. That is,
+
