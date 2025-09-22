@@ -289,3 +289,13 @@ From a Bayesian viewpoint, ridge regression and the lasso follow directly from a
 
 *Left: ridge regression is the posterior model for beta under a Gaussian prior. Right: The lasso is the posterior mode for beta under a double-exponential prior.*
 
+# Selecting the Tuning Parameter
+
+Just as the subset selection approaches considered in a previous section require a method to determine which of the models under consideration is best, implementing ridge regression and the lasso requires a method for selecting a value for the tuning parameter λ, or equivalently, the value of the constraint *s*. Cross-validation provides a simple way to tackle this problem. We choose a grid of λ values, and compute the cross-validation error for each value of λ, as described in Chapter 5. We then select the tuning parameter value for which the cross-validation error is smallest. Finally, the model is re-fit using all of the available observations and the selected value of the tuning parameter.
+
+The following figure displays the choice of λ that results from performing leave-one-out cross-validation on the ridge regression fits from the `Credit` data set.
+
+![Alt image](../images/cross_validation_ridge_lasso.png)
+
+*Left: Cross-validation errors that result from applying ridge regression to the `Credit` data set with various values of λ. Right: The coefficient estimates as a function of λ. The vertical dashed lines indicate the value of λ selected by cross-validation.*
+
