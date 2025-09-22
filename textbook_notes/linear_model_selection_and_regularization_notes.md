@@ -299,3 +299,12 @@ The following figure displays the choice of λ that results from performing leav
 
 *Left: Cross-validation errors that result from applying ridge regression to the `Credit` data set with various values of λ. Right: The coefficient estimates as a function of λ. The vertical dashed lines indicate the value of λ selected by cross-validation.*
 
+In this case, the value of λ is relatively small, indicating that the optimal fit only involves a small amount of shrinkage relative to the least squares solution. In addition, the dip isn't very pronounced, so there is a rather wide range of values that would give a very similar error. In a case like this we might simply use the least squares solution.
+
+The following graph provides an illustration of ten-fold cross-validation applied to the lasso fits on the sparse simulated data.
+
+![Alt image](../images/10_fold_cross_validation.png)
+
+The left-hand panel displays the cross-validation error, while the right-hand panel displays the coefficient estimates. The vertical dashed lines indicate the point at which the cross-validation error is smallest. The two colored lines in the right-hand panel represent the two predictors that are related to the response, while the grey lines represent the unrelated predictors; these are often referred to as **signal or noise variables**, respectively. Not only has the lasso correctly given much larger coefficient estimates to the two signal predictors, but also the minimum cross-validation error corresponds to a set of coefficient estimates for which only the signal variables are non-zero. Hence, cross-validation together with the lasso has correctly identified the two signal variables in the model.
+
+# Dimension Reduction Methods
