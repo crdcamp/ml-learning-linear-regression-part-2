@@ -309,6 +309,8 @@ The left-hand panel displays the cross-validation error, while the right-hand pa
 
 # Dimension Reduction Methods
 
+Refer to [this video](https://www.youtube.com/watch?v=3uxOyk-SczU) for an overview.
+
 The methods that we have discussed so far in this chapter have controlled variance in two different ways, either by using a subset of the original variables, or by shrinking their coefficients towards zero.
 
 All of these methods are defined using the original predictors. We now explore a class of approaches that *transform* the predictors and then fit a least squares model using the transformed variables. We will refer to these techniques as **dimension reduction methods**.
@@ -319,6 +321,28 @@ Let Z1, Z2..., ZM represent M < *p* **linear combinations** of our original *p* 
 
 For some constants φ1m, φ2m . . . , φpm, m = 1, . . . , M. We can then fit the linear regression model
 
+**Note:** φ is "phi". They are the constants (weights) that determine how much each original predictor X contributes to each new transformed predictor Z.
+
+**Another note:** "Transform" means creating new variables from your original variables using mathematical operations. You're not just selecting or removing variables - you're mathematically combining them to create entirely new variables (the Z's) that didn't exist before.
+
 ![Alt image](../images/dim_reduction_2.png)
 
-using least squares.
+using least squares. Note that in the above formula, the regression coefficients are given by θ0, θ1, . . . , θM. If the constants φ1m, φ2m, . . . , φpm are chose wisely, then such dimension reduction approaches can often outperform least squares regression.
+
+The term **dimension reduction** comes from the fact that this approach reduces the problem of estimating the *p*+1 coefficients β0, β1, . . . , βp to the simpler problem of estimating the M+1 coefficients θ0, θ1, . . . , θM, where M < *p*. In other words, **the dimension of the problem has been reduced from *p*+1 to M+1**.
+
+Dimension reduction serves to constrain the estimated βj coefficients. There's a bunch of math behind this that we're not gonna go into right now.
+
+Anyway, the constraint on the form of the coefficients has the potential to bias to coefficient estimates. However, in situations where *p* is large relative to *n*, selecting a value of M << *p* can significantly reduce the variance of the fitted coefficients. If M = *p*, and all the Zm are linearly independent, then the above equation poses no constraints. In this case, no dimension reduction occurs.
+
+All dimension reduction methods work in steps. First, the transformed predictors Z1, Z2, . . . , ZM are obtained. Second, the model is fit using these M predictors. However, the choice of Z1, Z2, . . . , ZM, or equivalently, the selection of the φjm’s can be achieved in different ways.
+
+We'll consider two approaches for this task: **principal component analysis** and **partial least squares**.
+
+## Principal Components Regression
+
+Principal component analysis (PCA) is a popular approach for deriving a low-dimensional set of features from a large set of variables.
+
+## An Overview of PCA
+
+PCA is a technique for reducing the dimension of an *n* x *p* data matrix X. The **first principal component** direction of the data is that along which the observations **vary the most**. 
