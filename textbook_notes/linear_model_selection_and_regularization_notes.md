@@ -345,4 +345,35 @@ Principal component analysis (PCA) is a popular approach for deriving a low-dime
 
 ## An Overview of PCA
 
-PCA is a technique for reducing the dimension of an *n* x *p* data matrix X. The **first principal component** direction of the data is that along which the observations **vary the most**. 
+**A note for interpreting variance here:**
+
+**Variance = information**. High variance means the data is spread out and contains useful signal. Low variance means the data is compressed into a small range and likely contains mostly noise.
+
+PCA is a technique for reducing the dimension of an *n* x *p* data matrix X. The **first principal component** direction of the data is that along which the observations **vary the most**. For instance, consider the following figure which shows population size (`pop`) in tens of thousands of people, and ad spending for a particular company (`ad`) in thousands of dollars, for 100 cities.
+
+![Alt image](../images/population_example.png)
+
+The green solid line represents the first principal component direction of the data. We can see by eye that this is the direction along which there is the greatest variability in the data.
+
+For instance, if we projected the 100 observations as shown here,
+
+![Alt image](../images/pop_pca.png)
+
+then the resulting projected observations would have the largest possible variance; projecting the observations onto any other line would yield projected observations with lower variance.
+
+The first principal component is given by the formula
+
+![Alt image](../images/first_pc_formula.png)
+
+Here, φ11 = 0.839 and φ21 = 0.544 are the principal component loadings, which define the direction referred to above. `pop` here indicates the mean of all `pop` values in the data set, and `ad` indicated the mean of all advertising spending. The idea is that out of every possible linear combination of `pop` and `ad` such that `φ**2_11
+11` + `φ**2_21` = 1, this particular linear combination yields the highest variance: i.e. this is the linear combination where Z1 is maximized.
+
+It's necessary to consider only linear combinations of the form where the sum of the φ values equals 1, since otherwise we could increase both values arbitrarily in order to blow up the variance. 
+
+Since *n* = 100, `pop` and `ad` are vectors of length 100, and so is Z1. For instance, 
+
+zi1 = 0.839 × (popi− avg(pop)) + 0.544 × (adi− avg(ad)).
+
+The values of z11,...,zn1 are known as the **principal component scores**, and can be seen in the right hand column of the above graph.
+
+There is also another interpretation of PCA: the first principal component vector defines the line that is as close as possible to the data. For instance, in the first graph of this section, the first principal component line minimizes the sum of the squared perpendicular distances between each point and the line. These distances are plotted as dashes lines in the left hand panel above, in which the crosses represent the *projection* of each point onto the first principal component line. The first principal component has been chosen so that the projected observations are as close as possible to the original observations.
