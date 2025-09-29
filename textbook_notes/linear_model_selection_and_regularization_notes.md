@@ -377,3 +377,44 @@ zi1 = 0.839 × (popi− avg(pop)) + 0.544 × (adi− avg(ad)).
 The values of z11,...,zn1 are known as the **principal component scores**, and can be seen in the right hand column of the above graph.
 
 There is also another interpretation of PCA: the first principal component vector defines the line that is as close as possible to the data. For instance, in the first graph of this section, the first principal component line minimizes the sum of the squared perpendicular distances between each point and the line. These distances are plotted as dashes lines in the left hand panel above, in which the crosses represent the *projection* of each point onto the first principal component line. The first principal component has been chosen so that the projected observations are as close as possible to the original observations.
+
+We can think of the values of the principal component Z1 as single number summaries of the joint `pop` and `ad` budgets for each location. In this example, if zi1 = 0.839 × (popi− pop) + 0.544 × (adi− ad) < 0, then this indicates a city with below-average population size, and below-average ad spending. A positive score suggests the opposite.
+
+To further cement our understanding, the following graph shows ziq versus both `pop` and `ad`.
+
+![Alt image](../images/z_vs_features.png)
+
+The plots show a strong relationship between the first principal component and the two features. In other words, the first principal component appears to capture most of the information contained in the `pop` and `ad` predictors.
+
+In general, one can construct up to *p* distinct principal components. The second principal component Z2 is a linear combination of the variables that are uncorrelated with Z1, and has the largest variance subject to this constraint.
+
+The second principal component direction is illustrated as a dashed blue line in the following graph
+
+![Alt image](../images/population_example.png)
+
+
+It turns out that the zero corelation condition of Z1 with Z2 is equivalent to the condition that **the direction must be perpendicular, or orthogonal, to the first principal component direction. The second principal component is given by the formula
+
+![Alt image](../images/second_pc.png)
+
+Notice how it's essentially just the first equation flipped around?
+
+Since the advertising data has two predictors, the first two principal components contain all of the information that's in `pop` and `ad`. However, by construction, **the first principal component will contain the most information**. 
+
+With two-dimensional data, such as in our advertising example, we can construct at most two principal components. However, if we had other predictors then additional components could be constructed. They would successively maximize variance, subject to the constraint of being uncorrelated with the preceding components.
+
+## The Principal Components Regression Approach
+
+The **principal components regression (PCR)** approach involves constructing the first *M* principal components, Z1,...Zm, and then using these components as the predictors in a linear regression model that is fit using least squares. The key idea is that often a small number of principal components suffice to explain most of the variability in the data, as well as the relationship with the response. 
+
+In other words, **we assume that the directions in which X1,...,Xp show the most variation are the directions that are associated with Y**. While this 
+
+If the assumption underlying PCR holds, then fitting a least squares model to Z1,..., Zm will lead to better results than fitting a least squares X1,..., Xp. Also, by estimating only M<<*p* coefficients we can **mitigate overfitting**.
+
+The below figure displays the PCR fits on the simulated data sets from earlier.
+
+![Alt image](../images/pcr_fits.png)
+
+Recall that both data sets were generated using *n* = 50 observations and *p* = 45 predictors. However, while the response in the first data set was a function of all the predictors, the response in the second data set was generated using only two of the predictors. As more principal components are used in the regression model, the bias decreases, but the variance increases.
+
+The figure indicates that performing PCR with an appropriate choice of *M* can result in a substantial improvement over least squares. However, by examining the ridge regression and lasso results in the previous sections, we see that PCR does not perform as well as the two shrinkage methods in this example. 
