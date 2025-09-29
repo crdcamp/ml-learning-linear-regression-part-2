@@ -351,6 +351,8 @@ Principal component analysis (PCA) is a popular approach for deriving a low-dime
 
 PCA is a technique for reducing the dimension of an *n* x *p* data matrix X. The **first principal component** direction of the data is that along which the observations **vary the most**. For instance, consider the following figure which shows population size (`pop`) in tens of thousands of people, and ad spending for a particular company (`ad`) in thousands of dollars, for 100 cities.
 
+**Note:** When we say "direction", we mean the number of linear combinations.
+
 ![Alt image](../images/population_example.png)
 
 The green solid line represents the first principal component direction of the data. We can see by eye that this is the direction along which there is the greatest variability in the data.
@@ -418,3 +420,41 @@ The below figure displays the PCR fits on the simulated data sets from earlier.
 Recall that both data sets were generated using *n* = 50 observations and *p* = 45 predictors. However, while the response in the first data set was a function of all the predictors, the response in the second data set was generated using only two of the predictors. As more principal components are used in the regression model, the bias decreases, but the variance increases.
 
 The figure indicates that performing PCR with an appropriate choice of *M* can result in a substantial improvement over least squares. However, by examining the ridge regression and lasso results in the previous sections, we see that PCR does not perform as well as the two shrinkage methods in this example. 
+
+The relatively worse performance of PCR is a consequence of the fact that the data were generated in such a way that many principal components are required in order to adequately model the response.
+
+In contrast, **PCR will tend to do well in cases when the first few principal components are sufficient to capture most of the variation in the predictors, as well as the relationship with the response. 
+
+The left-hand panel below illustrates the results from another simulated data set designed to be more favorable to PCR.
+
+![Alt image](../images/pcr_fits_2.png)
+
+Here the response was generated in a way that it depends exclusively on the first five principal components. 
+
+All three models offer a significant improvement over least squares. However, PCR and ridge regression slightly outperform the lasso.
+
+**We note that even though PCR provides a simple way to perform regression using *M* < *P* predictors, it is not a feature selection method.** This is because each of the *M* principal components used in the rgression is a linear combination of all *p* of the original features.
+
+Therefore, while PCR performs well in many practical settings, is **doesn't result in the development of a model that relies upon a small set of the original features**. In this sense, PCR is more closely related to ridge regression than to the lasso.
+
+In fact, one can show that PCR and ridge regression are very closely related. One can even think of ridge regression as a continuous version of PCR.
+
+**When performing PCR, it's generally recommended to standardize each predictors using the formula we covered that standardizes the predictors for ridge regression prior to generating the principal components**.
+
+# Partial Least Squares
+
+PCA involves identifying linear combinations (directions) in an **unsupervised** way, since the response Y is not used to help determine the principal component directions. Consequently, PCR suffers from a drawback: there is no guarantee that the directions that best explain the predictors will also be the best directions to use for predicting the response.
+
+Now let's check out **partial least squares (PLS)**, a **supervised** alternative to PCR. Like PCR, PLS is a dimension reduction method that first identifies a new zet of features Z1,..., Zm that are linear combinations of the original features, then fits a linear model via least squares using these M new features.
+
+BUT, unlike PCR, PLS identifies these new features in a supervised way-that is, it makes use of the response Y in order to identify new features that not only approximate the old features well, but also that **are related to the response**.
+
+Roughly speaking, **the PLS approach attempts to find directions that help explain both the response and the predictors. Now let's talk about how the first PLS direction is computed.
+
+After standardizing the *p* predictors, PLS computes the first direction Z1 by setting each φj1 in the first Zm formula we were introduced to in this chapter equal to the coefficient from the simple linear regression of Y onto Xj. One can show that this coefficient is proportional to the correlation between Y and Xj. Hence, in computing Z1, PLS places the highest weight on the variables that are most strongly related to the response.
+
+The following figure displays an example of PLS on a synthetic dataset with Sales in each of 100 regions as the response, and two predictors; Population Size and Advertizing spending.
+
+![Alt image](../images/pls_plc_comparison.png)
+
+PLS has chosen a direction that has less change in the `ad` dimension per unit change in the `pop` dimension, relative to the PCA. This suggests that `pop` is more highly correlated with the response than is `ad`. The PLS direction does not fit the predictors as closely as does PCA, but it does a better job explaining the response.
