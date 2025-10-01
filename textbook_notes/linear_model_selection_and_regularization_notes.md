@@ -499,3 +499,8 @@ Here are the biggest takeaways:
 
 ## Interpreting Results in High Dimensions
 
+When we perform the lasso, ridge regression, or other regression procedures in the high-dimensional setting, **we must be cautious in the way that we report the results obtained**.
+
+In the high dimensional setting, the multicollinearity problem is extreme: any variable in the model can be written as a linear combination of all of the other variables in the model.
+
+Essentially, this means we can never know exactly which variables (if any) truly are predictive of the outcome, and we can never identify the best coefficients for use in the regression.
