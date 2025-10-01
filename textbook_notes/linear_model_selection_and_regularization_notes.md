@@ -449,12 +449,22 @@ Now let's check out **partial least squares (PLS)**, a **supervised** alternativ
 
 BUT, unlike PCR, PLS identifies these new features in a supervised way-that is, it makes use of the response Y in order to identify new features that not only approximate the old features well, but also that **are related to the response**.
 
-Roughly speaking, **the PLS approach attempts to find directions that help explain both the response and the predictors. Now let's talk about how the first PLS direction is computed.
+Roughly speaking, **the PLS approach attempts to find directions that help explain both the response and the predictors**. Now let's talk about how the first PLS direction is computed.
 
-After standardizing the *p* predictors, PLS computes the first direction Z1 by setting each φj1 in the first Zm formula we were introduced to in this chapter equal to the coefficient from the simple linear regression of Y onto Xj. One can show that this coefficient is proportional to the correlation between Y and Xj. Hence, in computing Z1, PLS places the highest weight on the variables that are most strongly related to the response.
+(Refer to somewhere around page 261 for better notes) After standardizing the *p* predictors, PLS computes the first direction Z1 by setting each φj1 in the first Zm formula we were introduced to in this chapter equal to the coefficient from the simple linear regression of Y onto Xj. One can show that this coefficient is proportional to the correlation between Y and Xj. Hence, in computing Z1, PLS places the highest weight on the variables that are most strongly related to the response.
 
 The following figure displays an example of PLS on a synthetic dataset with Sales in each of 100 regions as the response, and two predictors; Population Size and Advertizing spending.
 
 ![Alt image](../images/pls_plc_comparison.png)
 
-PLS has chosen a direction that has less change in the `ad` dimension per unit change in the `pop` dimension, relative to the PCA. This suggests that `pop` is more highly correlated with the response than is `ad`. The PLS direction does not fit the predictors as closely as does PCA, but it does a better job explaining the response.
+The solid green line indicates the first PLS direction, while the dotted line shows the the first principal component direction. PLS has chosen a direction that has less change in the `ad` dimension per unit change in the `pop` dimension, relative to the PCA. This suggests that `pop` is more highly correlated with the response than is `ad`. The PLS direction does not fit the predictors as closely as does PCA, but it does a better job explaining the response.
+
+To identify the second PLS direction we first adjust each of the variables for Z1, by regressing each variable on Z1, and taking residuals. These residuals can be interpreted as the remaining information that has not been explained by the first PLS direction. We then compute Z2 using **orthogonalized** data in exactly the same fashion as Z1 as Z1 was computed based on the original data.
+
+This iterative approach can be repeated M times to identify multiple PLS components Z1,...,ZM. Finally, at the end of this procedure, we use least squares to fit a linear model to predict Y using Z1,... Zm in exactly the same fashion as for PCR.
+
+As with PCR, the number M of partial least squares directions used in PLS is a tuning parameter that is typically chosen by cross-validation. We generally standardize the predictors and response before performing PLS.
+
+While the supervised dimension reduction of PLS can reduce bias, it also has the potential to increase variance, so that the overall benefit of PLS relative to PCR is a wash.
+
+# Considerations in High Dimensions
