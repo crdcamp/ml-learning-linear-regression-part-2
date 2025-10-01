@@ -468,3 +468,34 @@ As with PCR, the number M of partial least squares directions used in PLS is a t
 While the supervised dimension reduction of PLS can reduce bias, it also has the potential to increase variance, so that the overall benefit of PLS relative to PCR is a wash.
 
 # Considerations in High Dimensions
+
+As you might've guessed, most traditional statistical techniques for regression and classification are intended for the **low-dimensional setting** where *n* is much greater than *p*. Interestingly, this is due in part to the fact that throughout most of the time they've been doing this genius shit, they've been working with relatively low-dimensional data.
+
+Again, as you might've guessed, recently that's changed. *p* can be freakin uge!
+
+Classical approaches such as least squares linear regression obviously aren't gonna cut it for high-dimensional data. BUT... let's talk about what happens if *p* is *slightly* smaller than *n*.
+
+## What Goes Wrong in High Dimensions?
+
+We're gonna use least squares regression as an example, but these concepts apply to other classical statistical approaches.
+
+When the number of features *p* is large as, or larger than *n*, least squares can't work. **The reason is simple: regardless of whether or not there is truly a relationship between the features and the response, least squares will yield a set of coefficient estimates that result in a perfect fit to the data, such that the residuals are zero**.
+
+In an earlier section, we saw a number of approaches for adjusting training set RSS or R-squared in order to account for the number of variables used to fit a least squares model. Unfortunately, the Cp, AIC, and BIC approaches aren't worth using in a high-dimensional setting either.
+
+## Regression in High Dimensions
+
+**Many of the methods seen in this chapter were for fitting less flexible least squares models, such as forward stepwise selection, ridge regression, the lasso, and principal components regression, are particularly useful for performing regression in the high-dimensional setting. Essentially, these approaches avoid overfitting by using a less flexible fitting approach than least squares.**
+
+Essentially the rest talks about the curse of dimensionality and how the more features you add the more likely you're just adding more noise to the model which will lead to overfitting.
+
+Here are the biggest takeaways:
+
+1. Regularization or shrinkage plays a key role in high-dimensional problems.
+1. Appropriate tuning parameter selection is crucial for good predictive performance.
+1. The test error tends to increase as the dimensionality of the problem increases, unless the additional features are truly associated with the response.
+
+**Even if a lot of the features in a high-dimensional setting are relevant (aka don't add noise), the variance incurred in fitting their coefficients may outweigh the reduction in bias that they bring.**
+
+## Interpreting Results in High Dimensions
+
