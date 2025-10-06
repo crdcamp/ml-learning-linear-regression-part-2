@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<!-- saved from url=(0132)https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#sphx-glr-auto-examples-linear-model-plot-ols-ridge-py -->
+<html lang="en" data-content_root="../../" data-mode="auto" data-theme="dark" class="fontawesome-i2svg-active fontawesome-i2svg-complete"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="Ordinary Least Squares and Ridge Regression">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://scikit-learn/stable/auto_examples/linear_model/plot_ols_ridge.html">
+<meta property="og:site_name" content="scikit-learn">
+<meta property="og:description" content="Ordinary Least Squares: We illustrate how to use the ordinary least squares (OLS) model, LinearRegression, on a single feature of the diabetes dataset. We train on a subset of the data, evaluate on...">
+<meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png">
+<meta property="og:image:alt" content="scikit-learn">
+<meta name="description" content="Ordinary Least Squares: We illustrate how to use the ordinary least squares (OLS) model, LinearRegression, on a single feature of the diabetes dataset. We train on a subset of the data, evaluate on...">
+
+    <title>Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <style type="text/css">:host,:root{--fa-font-solid:normal 900 1em/1 "Font Awesome 6 Solid";--fa-font-regular:normal 400 1em/1 "Font Awesome 6 Regular";--fa-font-light:normal 300 1em/1 "Font Awesome 6 Light";--fa-font-thin:normal 100 1em/1 "Font Awesome 6 Thin";--fa-font-duotone:normal 900 1em/1 "Font Awesome 6 Duotone";--fa-font-sharp-solid:normal 900 1em/1 "Font Awesome 6 Sharp";--fa-font-sharp-regular:normal 400 1em/1 "Font Awesome 6 Sharp";--fa-font-sharp-light:normal 300 1em/1 "Font Awesome 6 Sharp";--fa-font-sharp-thin:normal 100 1em/1 "Font Awesome 6 Sharp";--fa-font-brands:normal 400 1em/1 "Font Awesome 6 Brands"}svg:not(:host).svg-inline--fa,svg:not(:root).svg-inline--fa{overflow:visible;box-sizing:content-box}.svg-inline--fa{display:var(--fa-display,inline-block);height:1em;overflow:visible;vertical-align:-.125em}.svg-inline--fa.fa-2xs{vertical-align:.1em}.svg-inline--fa.fa-xs{vertical-align:0}.svg-inline--fa.fa-sm{vertical-align:-.0714285705em}.svg-inline--fa.fa-lg{vertical-align:-.2em}.svg-inline--fa.fa-xl{vertical-align:-.25em}.svg-inline--fa.fa-2xl{vertical-align:-.3125em}.svg-inline--fa.fa-pull-left{margin-right:var(--fa-pull-margin,.3em);width:auto}.svg-inline--fa.fa-pull-right{margin-left:var(--fa-pull-margin,.3em);width:auto}.svg-inline--fa.fa-li{width:var(--fa-li-width,2em);top:.25em}.svg-inline--fa.fa-fw{width:var(--fa-fw-width,1.25em)}.fa-layers svg.svg-inline--fa{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.fa-layers-counter,.fa-layers-text{display:inline-block;position:absolute;text-align:center}.fa-layers{display:inline-block;height:1em;position:relative;text-align:center;vertical-align:-.125em;width:1em}.fa-layers svg.svg-inline--fa{-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-text{left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter{background-color:var(--fa-counter-background-color,#ff253a);border-radius:var(--fa-counter-border-radius,1em);box-sizing:border-box;color:var(--fa-inverse,#fff);line-height:var(--fa-counter-line-height,1);max-width:var(--fa-counter-max-width,5em);min-width:var(--fa-counter-min-width,1.5em);overflow:hidden;padding:var(--fa-counter-padding,.25em .5em);right:var(--fa-right,0);text-overflow:ellipsis;top:var(--fa-top,0);-webkit-transform:scale(var(--fa-counter-scale,.25));transform:scale(var(--fa-counter-scale,.25));-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-bottom-right{bottom:var(--fa-bottom,0);right:var(--fa-right,0);top:auto;-webkit-transform:scale(var(--fa-layers-scale,.25));transform:scale(var(--fa-layers-scale,.25));-webkit-transform-origin:bottom right;transform-origin:bottom right}.fa-layers-bottom-left{bottom:var(--fa-bottom,0);left:var(--fa-left,0);right:auto;top:auto;-webkit-transform:scale(var(--fa-layers-scale,.25));transform:scale(var(--fa-layers-scale,.25));-webkit-transform-origin:bottom left;transform-origin:bottom left}.fa-layers-top-right{top:var(--fa-top,0);right:var(--fa-right,0);-webkit-transform:scale(var(--fa-layers-scale,.25));transform:scale(var(--fa-layers-scale,.25));-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-top-left{left:var(--fa-left,0);right:auto;top:var(--fa-top,0);-webkit-transform:scale(var(--fa-layers-scale,.25));transform:scale(var(--fa-layers-scale,.25));-webkit-transform-origin:top left;transform-origin:top left}.fa-1x{font-size:1em}.fa-2x{font-size:2em}.fa-3x{font-size:3em}.fa-4x{font-size:4em}.fa-5x{font-size:5em}.fa-6x{font-size:6em}.fa-7x{font-size:7em}.fa-8x{font-size:8em}.fa-9x{font-size:9em}.fa-10x{font-size:10em}.fa-2xs{font-size:.625em;line-height:.1em;vertical-align:.225em}.fa-xs{font-size:.75em;line-height:.0833333337em;vertical-align:.125em}.fa-sm{font-size:.875em;line-height:.0714285718em;vertical-align:.0535714295em}.fa-lg{font-size:1.25em;line-height:.05em;vertical-align:-.075em}.fa-xl{font-size:1.5em;line-height:.0416666682em;vertical-align:-.125em}.fa-2xl{font-size:2em;line-height:.03125em;vertical-align:-.1875em}.fa-fw{text-align:center;width:1.25em}.fa-ul{list-style-type:none;margin-left:var(--fa-li-margin,2.5em);padding-left:0}.fa-ul>li{position:relative}.fa-li{left:calc(var(--fa-li-width,2em) * -1);position:absolute;text-align:center;width:var(--fa-li-width,2em);line-height:inherit}.fa-border{border-color:var(--fa-border-color,#eee);border-radius:var(--fa-border-radius,.1em);border-style:var(--fa-border-style,solid);border-width:var(--fa-border-width,.08em);padding:var(--fa-border-padding,.2em .25em .15em)}.fa-pull-left{float:left;margin-right:var(--fa-pull-margin,.3em)}.fa-pull-right{float:right;margin-left:var(--fa-pull-margin,.3em)}.fa-beat{-webkit-animation-name:fa-beat;animation-name:fa-beat;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,ease-in-out);animation-timing-function:var(--fa-animation-timing,ease-in-out)}.fa-bounce{-webkit-animation-name:fa-bounce;animation-name:fa-bounce;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,cubic-bezier(.28,.84,.42,1));animation-timing-function:var(--fa-animation-timing,cubic-bezier(.28,.84,.42,1))}.fa-fade{-webkit-animation-name:fa-fade;animation-name:fa-fade;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,cubic-bezier(.4,0,.6,1));animation-timing-function:var(--fa-animation-timing,cubic-bezier(.4,0,.6,1))}.fa-beat-fade{-webkit-animation-name:fa-beat-fade;animation-name:fa-beat-fade;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,cubic-bezier(.4,0,.6,1));animation-timing-function:var(--fa-animation-timing,cubic-bezier(.4,0,.6,1))}.fa-flip{-webkit-animation-name:fa-flip;animation-name:fa-flip;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,ease-in-out);animation-timing-function:var(--fa-animation-timing,ease-in-out)}.fa-shake{-webkit-animation-name:fa-shake;animation-name:fa-shake;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,linear);animation-timing-function:var(--fa-animation-timing,linear)}.fa-spin{-webkit-animation-name:fa-spin;animation-name:fa-spin;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,2s);animation-duration:var(--fa-animation-duration,2s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,linear);animation-timing-function:var(--fa-animation-timing,linear)}.fa-spin-reverse{--fa-animation-direction:reverse}.fa-pulse,.fa-spin-pulse{-webkit-animation-name:fa-spin;animation-name:fa-spin;-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,steps(8));animation-timing-function:var(--fa-animation-timing,steps(8))}@media (prefers-reduced-motion:reduce){.fa-beat,.fa-beat-fade,.fa-bounce,.fa-fade,.fa-flip,.fa-pulse,.fa-shake,.fa-spin,.fa-spin-pulse{-webkit-animation-delay:-1ms;animation-delay:-1ms;-webkit-animation-duration:1ms;animation-duration:1ms;-webkit-animation-iteration-count:1;animation-iteration-count:1;-webkit-transition-delay:0s;transition-delay:0s;-webkit-transition-duration:0s;transition-duration:0s}}@-webkit-keyframes fa-beat{0%,90%{-webkit-transform:scale(1);transform:scale(1)}45%{-webkit-transform:scale(var(--fa-beat-scale,1.25));transform:scale(var(--fa-beat-scale,1.25))}}@keyframes fa-beat{0%,90%{-webkit-transform:scale(1);transform:scale(1)}45%{-webkit-transform:scale(var(--fa-beat-scale,1.25));transform:scale(var(--fa-beat-scale,1.25))}}@-webkit-keyframes fa-bounce{0%{-webkit-transform:scale(1,1) translateY(0);transform:scale(1,1) translateY(0)}10%{-webkit-transform:scale(var(--fa-bounce-start-scale-x,1.1),var(--fa-bounce-start-scale-y,.9)) translateY(0);transform:scale(var(--fa-bounce-start-scale-x,1.1),var(--fa-bounce-start-scale-y,.9)) translateY(0)}30%{-webkit-transform:scale(var(--fa-bounce-jump-scale-x,.9),var(--fa-bounce-jump-scale-y,1.1)) translateY(var(--fa-bounce-height,-.5em));transform:scale(var(--fa-bounce-jump-scale-x,.9),var(--fa-bounce-jump-scale-y,1.1)) translateY(var(--fa-bounce-height,-.5em))}50%{-webkit-transform:scale(var(--fa-bounce-land-scale-x,1.05),var(--fa-bounce-land-scale-y,.95)) translateY(0);transform:scale(var(--fa-bounce-land-scale-x,1.05),var(--fa-bounce-land-scale-y,.95)) translateY(0)}57%{-webkit-transform:scale(1,1) translateY(var(--fa-bounce-rebound,-.125em));transform:scale(1,1) translateY(var(--fa-bounce-rebound,-.125em))}64%{-webkit-transform:scale(1,1) translateY(0);transform:scale(1,1) translateY(0)}100%{-webkit-transform:scale(1,1) translateY(0);transform:scale(1,1) translateY(0)}}@keyframes fa-bounce{0%{-webkit-transform:scale(1,1) translateY(0);transform:scale(1,1) translateY(0)}10%{-webkit-transform:scale(var(--fa-bounce-start-scale-x,1.1),var(--fa-bounce-start-scale-y,.9)) translateY(0);transform:scale(var(--fa-bounce-start-scale-x,1.1),var(--fa-bounce-start-scale-y,.9)) translateY(0)}30%{-webkit-transform:scale(var(--fa-bounce-jump-scale-x,.9),var(--fa-bounce-jump-scale-y,1.1)) translateY(var(--fa-bounce-height,-.5em));transform:scale(var(--fa-bounce-jump-scale-x,.9),var(--fa-bounce-jump-scale-y,1.1)) translateY(var(--fa-bounce-height,-.5em))}50%{-webkit-transform:scale(var(--fa-bounce-land-scale-x,1.05),var(--fa-bounce-land-scale-y,.95)) translateY(0);transform:scale(var(--fa-bounce-land-scale-x,1.05),var(--fa-bounce-land-scale-y,.95)) translateY(0)}57%{-webkit-transform:scale(1,1) translateY(var(--fa-bounce-rebound,-.125em));transform:scale(1,1) translateY(var(--fa-bounce-rebound,-.125em))}64%{-webkit-transform:scale(1,1) translateY(0);transform:scale(1,1) translateY(0)}100%{-webkit-transform:scale(1,1) translateY(0);transform:scale(1,1) translateY(0)}}@-webkit-keyframes fa-fade{50%{opacity:var(--fa-fade-opacity,.4)}}@keyframes fa-fade{50%{opacity:var(--fa-fade-opacity,.4)}}@-webkit-keyframes fa-beat-fade{0%,100%{opacity:var(--fa-beat-fade-opacity,.4);-webkit-transform:scale(1);transform:scale(1)}50%{opacity:1;-webkit-transform:scale(var(--fa-beat-fade-scale,1.125));transform:scale(var(--fa-beat-fade-scale,1.125))}}@keyframes fa-beat-fade{0%,100%{opacity:var(--fa-beat-fade-opacity,.4);-webkit-transform:scale(1);transform:scale(1)}50%{opacity:1;-webkit-transform:scale(var(--fa-beat-fade-scale,1.125));transform:scale(var(--fa-beat-fade-scale,1.125))}}@-webkit-keyframes fa-flip{50%{-webkit-transform:rotate3d(var(--fa-flip-x,0),var(--fa-flip-y,1),var(--fa-flip-z,0),var(--fa-flip-angle,-180deg));transform:rotate3d(var(--fa-flip-x,0),var(--fa-flip-y,1),var(--fa-flip-z,0),var(--fa-flip-angle,-180deg))}}@keyframes fa-flip{50%{-webkit-transform:rotate3d(var(--fa-flip-x,0),var(--fa-flip-y,1),var(--fa-flip-z,0),var(--fa-flip-angle,-180deg));transform:rotate3d(var(--fa-flip-x,0),var(--fa-flip-y,1),var(--fa-flip-z,0),var(--fa-flip-angle,-180deg))}}@-webkit-keyframes fa-shake{0%{-webkit-transform:rotate(-15deg);transform:rotate(-15deg)}4%{-webkit-transform:rotate(15deg);transform:rotate(15deg)}24%,8%{-webkit-transform:rotate(-18deg);transform:rotate(-18deg)}12%,28%{-webkit-transform:rotate(18deg);transform:rotate(18deg)}16%{-webkit-transform:rotate(-22deg);transform:rotate(-22deg)}20%{-webkit-transform:rotate(22deg);transform:rotate(22deg)}32%{-webkit-transform:rotate(-12deg);transform:rotate(-12deg)}36%{-webkit-transform:rotate(12deg);transform:rotate(12deg)}100%,40%{-webkit-transform:rotate(0);transform:rotate(0)}}@keyframes fa-shake{0%{-webkit-transform:rotate(-15deg);transform:rotate(-15deg)}4%{-webkit-transform:rotate(15deg);transform:rotate(15deg)}24%,8%{-webkit-transform:rotate(-18deg);transform:rotate(-18deg)}12%,28%{-webkit-transform:rotate(18deg);transform:rotate(18deg)}16%{-webkit-transform:rotate(-22deg);transform:rotate(-22deg)}20%{-webkit-transform:rotate(22deg);transform:rotate(22deg)}32%{-webkit-transform:rotate(-12deg);transform:rotate(-12deg)}36%{-webkit-transform:rotate(12deg);transform:rotate(12deg)}100%,40%{-webkit-transform:rotate(0);transform:rotate(0)}}@-webkit-keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.fa-rotate-90{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.fa-rotate-180{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.fa-rotate-270{-webkit-transform:rotate(270deg);transform:rotate(270deg)}.fa-flip-horizontal{-webkit-transform:scale(-1,1);transform:scale(-1,1)}.fa-flip-vertical{-webkit-transform:scale(1,-1);transform:scale(1,-1)}.fa-flip-both,.fa-flip-horizontal.fa-flip-vertical{-webkit-transform:scale(-1,-1);transform:scale(-1,-1)}.fa-rotate-by{-webkit-transform:rotate(var(--fa-rotate-angle,0));transform:rotate(var(--fa-rotate-angle,0))}.fa-stack{display:inline-block;vertical-align:middle;height:2em;position:relative;width:2.5em}.fa-stack-1x,.fa-stack-2x{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0;z-index:var(--fa-stack-z-index,auto)}.svg-inline--fa.fa-stack-1x{height:1em;width:1.25em}.svg-inline--fa.fa-stack-2x{height:2em;width:2.5em}.fa-inverse{color:var(--fa-inverse,#fff)}.fa-sr-only,.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}.fa-sr-only-focusable:not(:focus),.sr-only-focusable:not(:focus){position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}.svg-inline--fa .fa-primary{fill:var(--fa-primary-color,currentColor);opacity:var(--fa-primary-opacity,1)}.svg-inline--fa .fa-secondary{fill:var(--fa-secondary-color,currentColor);opacity:var(--fa-secondary-opacity,.4)}.svg-inline--fa.fa-swap-opacity .fa-primary{opacity:var(--fa-secondary-opacity,.4)}.svg-inline--fa.fa-swap-opacity .fa-secondary{opacity:var(--fa-primary-opacity,1)}.svg-inline--fa mask .fa-primary,.svg-inline--fa mask .fa-secondary{fill:#000}.fa-duotone.fa-inverse,.fad.fa-inverse{color:var(--fa-inverse,#fff)}</style><link href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/theme.css" rel="stylesheet">
+<link href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/pydata-sphinx-theme.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/pygments.css">
+    <link rel="stylesheet" type="text/css" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/copybutton.css">
+    <link rel="stylesheet" type="text/css" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/plot_directive.css">
+    <link rel="stylesheet" type="text/css" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/css">
+    <link rel="stylesheet" type="text/css" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/jupyterlite_sphinx.css">
+    <link rel="stylesheet" type="text/css" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sg_gallery.css">
+    <link rel="stylesheet" type="text/css" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sg_gallery-binder.css">
+    <link rel="stylesheet" type="text/css" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sg_gallery-dataframe.css">
+    <link rel="stylesheet" type="text/css" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sg_gallery-rendered-html.css">
+    <link rel="stylesheet" type="text/css" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sphinx-design.min.css">
+    <link rel="stylesheet" type="text/css" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/colors.css">
+    <link rel="stylesheet" type="text/css" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/custom.css">
+  
+  <!-- So that users can add custom icons -->
+  <script src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/fontawesome.js"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/bootstrap.js">
+<link rel="preload" as="script" href="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/pydata-sphinx-theme.js">
+
+    <script src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/documentation_options.js"></script>
+    <script src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/doctools.js"></script>
+    <script src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sphinx_highlight.js"></script>
+    <script src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/clipboard.min.js"></script>
+    <script src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/copybutton.js"></script>
+    <script src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/jupyterlite_sphinx.js"></script>
+    <script src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/design-tabs.js"></script>
+    <script data-domain="scikit-learn.org" defer="defer" src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/linear_model/plot_ols_ridge';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/dev/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.7.2';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/dropdown.js"></script>
+    <script src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/version-switcher.js"></script>
+    <script src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sg_plotly_resize.js"></script>
+    <link rel="canonical" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html">
+    <link rel="icon" href="https://scikit-learn.org/stable/_static/favicon.ico">
+    <link rel="author" title="About these documents" href="https://scikit-learn.org/stable/about.html">
+    <link rel="search" title="Search" href="https://scikit-learn.org/stable/search.html">
+    <link rel="next" title="Orthogonal Matching Pursuit" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_omp.html">
+    <link rel="prev" title="One-Class SVM versus One-Class SVM using Stochastic Gradient Descent" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_sgdocsvm_vs_ocsvm.html">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="docsearch:language" content="en">
+  <meta name="docsearch:version" content="1.7">
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top" style="display: none;">
+    <svg class="svg-inline--fa fa-arrow-up" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"></path></svg><!-- <i class="fa-solid fa-arrow-up"></i> Font Awesome fontawesome.com -->Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center" action="https://scikit-learn.org/stable/search.html" method="get">
+  <svg class="svg-inline--fa fa-magnifying-glass" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg><!-- <i class="fa-solid fa-magnifying-glass"></i> Font Awesome fontawesome.com -->
+  <input type="search" class="form-control" name="q" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">⌘</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer" style="height: auto;">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <svg class="svg-inline--fa fa-bars" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"></path></svg><!-- <span class="fa-solid fa-bars"></span> Font Awesome fontawesome.com -->
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="https://scikit-learn.org/stable/index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage">
+    <img src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/scikit-learn-logo-small.png" class="logo__image only-dark pst-js-only" alt="scikit-learn homepage">
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/user_guide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/api/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+    Community
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu dropdown-menu-dark">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="https://scikit-learn.org/stable/getting_started.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="https://scikit-learn.org/stable/whats_new.html">
+    Release History
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="https://scikit-learn.org/stable/glossary.html">
+    Glossary
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/developers/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="https://scikit-learn.org/stable/faq.html">
+    FAQ
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="https://scikit-learn.org/stable/support.html">
+    Support
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="https://scikit-learn.org/stable/related_projects.html">
+    Related Projects
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="https://scikit-learn.org/stable/roadmap.html">
+    Roadmap
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="https://scikit-learn.org/stable/governance.html">
+    Governance
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="https://scikit-learn.org/stable/about.html">
+    About us
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-original-title="Search">
+    <svg class="svg-inline--fa fa-magnifying-glass fa-lg" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg><!-- <i class="fa-solid fa-magnifying-glass fa-lg"></i> Font Awesome fontawesome.com -->
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <svg class="svg-inline--fa fa-sun theme-switch fa-lg" data-mode="light" aria-labelledby="svg-inline--fa-title-jiTtrrEXZY9f" data-prefix="fas" data-icon="sun" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><title id="svg-inline--fa-title-jiTtrrEXZY9f">Light</title><path fill="currentColor" d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"></path></svg><!-- <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i> Font Awesome fontawesome.com -->
+  <svg class="svg-inline--fa fa-moon theme-switch fa-lg" data-mode="dark" aria-labelledby="svg-inline--fa-title-fMRX1lEGWG5b" data-prefix="fas" data-icon="moon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><title id="svg-inline--fa-title-fMRX1lEGWG5b">Dark</title><path fill="currentColor" d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path></svg><!-- <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark" title="Dark"></i> Font Awesome fontawesome.com -->
+  <svg class="svg-inline--fa fa-circle-half-stroke theme-switch fa-lg" data-mode="auto" aria-labelledby="svg-inline--fa-title-lgWX8DTu6kW0" data-prefix="fas" data-icon="circle-half-stroke" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><title id="svg-inline--fa-title-lgWX8DTu6kW0">System Settings</title><path fill="currentColor" d="M448 256c0-106-86-192-192-192V448c106 0 192-86 192-192zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"></path></svg><!-- <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i> Font Awesome fontawesome.com -->
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scikit-learn/scikit-learn" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="GitHub"><svg class="svg-inline--fa fa-square-github fa-lg" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="square-github" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M448 96c0-35.3-28.7-64-64-64H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96zM265.8 407.7c0-1.8 0-6 .1-11.6c.1-11.4 .1-28.8 .1-43.7c0-15.6-5.2-25.5-11.3-30.7c37-4.1 76-9.2 76-73.1c0-18.2-6.5-27.3-17.1-39c1.7-4.3 7.4-22-1.7-45c-13.9-4.3-45.7 17.9-45.7 17.9c-13.2-3.7-27.5-5.6-41.6-5.6s-28.4 1.9-41.6 5.6c0 0-31.8-22.2-45.7-17.9c-9.1 22.9-3.5 40.6-1.7 45c-10.6 11.7-15.6 20.8-15.6 39c0 63.6 37.3 69 74.3 73.1c-4.8 4.3-9.1 11.7-10.6 22.3c-9.5 4.3-33.8 11.7-48.3-13.9c-9.1-15.8-25.5-17.1-25.5-17.1c-16.2-.2-1.1 10.2-1.1 10.2c10.8 5 18.4 24.2 18.4 24.2c9.7 29.7 56.1 19.7 56.1 19.7c0 9 .1 21.7 .1 30.6c0 4.8 .1 8.6 .1 10c0 4.3-3 9.5-11.5 8C106 393.6 59.8 330.8 59.8 257.4c0-91.8 70.2-161.5 162-161.5s166.2 69.7 166.2 161.5c.1 73.4-44.7 136.3-110.7 158.3c-8.4 1.5-11.5-3.7-11.5-8zm-90.5-54.8c-.2-1.5 1.1-2.8 3-3.2c1.9-.2 3.7 .6 3.9 1.9c.3 1.3-1 2.6-3 3c-1.9 .4-3.7-.4-3.9-1.7zm-9.1 3.2c-2.2 .2-3.7-.9-3.7-2.4c0-1.3 1.5-2.4 3.5-2.4c1.9-.2 3.7 .9 3.7 2.4c0 1.3-1.5 2.4-3.5 2.4zm-14.3-2.2c-1.9-.4-3.2-1.9-2.8-3.2s2.4-1.9 4.1-1.5c2 .6 3.3 2.1 2.8 3.4c-.4 1.3-2.4 1.9-4.1 1.3zm-12.5-7.3c-1.5-1.3-1.9-3.2-.9-4.1c.9-1.1 2.8-.9 4.3 .6c1.3 1.3 1.8 3.3 .9 4.1c-.9 1.1-2.8 .9-4.3-.6zm-8.5-10c-1.1-1.5-1.1-3.2 0-3.9c1.1-.9 2.8-.2 3.7 1.3c1.1 1.5 1.1 3.3 0 4.1c-.9 .6-2.6 0-3.7-1.5zm-6.3-8.8c-1.1-1.3-1.3-2.8-.4-3.5c.9-.9 2.4-.4 3.5 .6c1.1 1.3 1.3 2.8 .4 3.5c-.9 .9-2.4 .4-3.5-.6zm-6-6.4c-1.3-.6-1.9-1.7-1.5-2.6c.4-.6 1.5-.9 2.8-.4c1.3 .7 1.9 1.8 1.5 2.6c-.4 .9-1.7 1.1-2.8 .4z"></path></svg><!-- <i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i> Font Awesome fontawesome.com -->
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2" type="button" class="version-switcher__button btn btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="listbox" aria-controls="pst-version-switcher-list-2" aria-label="Version switcher list" data-active-version-name="1.7.2 (stable)" data-active-version="1.7.2">1.7.2 (stable)</button>
+  <div id="pst-version-switcher-list-2" class="version-switcher__menu dropdown-menu list-group-flush py-0 dropdown-menu-dark" role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  <a class="dropdown-item list-group-item list-group-item-action py-1" href="https://scikit-learn.org/dev/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.8.dev0 (dev)" data-version="1.8.dev0"><span>1.8.dev0 (dev)</span></a><a class="dropdown-item list-group-item list-group-item-action py-1 active" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.7.2 (stable)" data-version="1.7.2"><span>1.7.2 (stable)</span></a><a class="dropdown-item list-group-item list-group-item-action py-1" href="https://scikit-learn.org/1.6/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.6.1" data-version="1.6.1"><span>1.6.1</span></a><a class="dropdown-item list-group-item list-group-item-action py-1" href="https://scikit-learn.org/1.5/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.5.2" data-version="1.5.2"><span>1.5.2</span></a><a class="dropdown-item list-group-item list-group-item-action py-1" href="https://scikit-learn.org/1.4/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.4.2" data-version="1.4.2"><span>1.4.2</span></a><a class="dropdown-item list-group-item list-group-item-action py-1" href="https://scikit-learn.org/1.3/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.3.2" data-version="1.3.2"><span>1.3.2</span></a><a class="dropdown-item list-group-item list-group-item-action py-1" href="https://scikit-learn.org/1.2/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.2.2" data-version="1.2.2"><span>1.2.2</span></a></div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-original-title="Search">
+    <svg class="svg-inline--fa fa-magnifying-glass fa-lg" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg><!-- <i class="fa-solid fa-magnifying-glass fa-lg"></i> Font Awesome fontawesome.com -->
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <svg class="svg-inline--fa fa-outdent" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="outdent" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M0 64C0 46.3 14.3 32 32 32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64zM192 192c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H224c-17.7 0-32-14.3-32-32zm32 96H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H224c-17.7 0-32-14.3-32-32s14.3-32 32-32zM0 448c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM.2 268.6c-8.2-6.4-8.2-18.9 0-25.3l101.9-79.3c10.5-8.2 25.8-.7 25.8 12.6V335.3c0 13.3-15.3 20.8-25.8 12.6L.2 268.6z"></path></svg><!-- <span class="fa-solid fa-outdent"></span> Font Awesome fontawesome.com -->
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/user_guide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/api/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+    Community
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/getting_started.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/whats_new.html">
+    Release History
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/glossary.html">
+    Glossary
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scikit-learn.org/dev/developers/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/faq.html">
+    FAQ
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/support.html">
+    Support
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/related_projects.html">
+    Related Projects
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/roadmap.html">
+    Roadmap
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/governance.html">
+    Governance
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="https://scikit-learn.org/stable/about.html">
+    About us
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <svg class="svg-inline--fa fa-sun theme-switch fa-lg" data-mode="light" aria-labelledby="svg-inline--fa-title-z87cYlukrlX8" data-prefix="fas" data-icon="sun" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><title id="svg-inline--fa-title-z87cYlukrlX8">Light</title><path fill="currentColor" d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"></path></svg><!-- <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i> Font Awesome fontawesome.com -->
+  <svg class="svg-inline--fa fa-moon theme-switch fa-lg" data-mode="dark" aria-labelledby="svg-inline--fa-title-j1pzJfYWm4VT" data-prefix="fas" data-icon="moon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><title id="svg-inline--fa-title-j1pzJfYWm4VT">Dark</title><path fill="currentColor" d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path></svg><!-- <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark" title="Dark"></i> Font Awesome fontawesome.com -->
+  <svg class="svg-inline--fa fa-circle-half-stroke theme-switch fa-lg" data-mode="auto" aria-labelledby="svg-inline--fa-title-p0gIPVtUxjPA" data-prefix="fas" data-icon="circle-half-stroke" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><title id="svg-inline--fa-title-p0gIPVtUxjPA">System Settings</title><path fill="currentColor" d="M448 256c0-106-86-192-192-192V448c106 0 192-86 192-192zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"></path></svg><!-- <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i> Font Awesome fontawesome.com -->
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scikit-learn/scikit-learn" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="GitHub"><svg class="svg-inline--fa fa-square-github fa-lg" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="square-github" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M448 96c0-35.3-28.7-64-64-64H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96zM265.8 407.7c0-1.8 0-6 .1-11.6c.1-11.4 .1-28.8 .1-43.7c0-15.6-5.2-25.5-11.3-30.7c37-4.1 76-9.2 76-73.1c0-18.2-6.5-27.3-17.1-39c1.7-4.3 7.4-22-1.7-45c-13.9-4.3-45.7 17.9-45.7 17.9c-13.2-3.7-27.5-5.6-41.6-5.6s-28.4 1.9-41.6 5.6c0 0-31.8-22.2-45.7-17.9c-9.1 22.9-3.5 40.6-1.7 45c-10.6 11.7-15.6 20.8-15.6 39c0 63.6 37.3 69 74.3 73.1c-4.8 4.3-9.1 11.7-10.6 22.3c-9.5 4.3-33.8 11.7-48.3-13.9c-9.1-15.8-25.5-17.1-25.5-17.1c-16.2-.2-1.1 10.2-1.1 10.2c10.8 5 18.4 24.2 18.4 24.2c9.7 29.7 56.1 19.7 56.1 19.7c0 9 .1 21.7 .1 30.6c0 4.8 .1 8.6 .1 10c0 4.3-3 9.5-11.5 8C106 393.6 59.8 330.8 59.8 257.4c0-91.8 70.2-161.5 162-161.5s166.2 69.7 166.2 161.5c.1 73.4-44.7 136.3-110.7 158.3c-8.4 1.5-11.5-3.7-11.5-8zm-90.5-54.8c-.2-1.5 1.1-2.8 3-3.2c1.9-.2 3.7 .6 3.9 1.9c.3 1.3-1 2.6-3 3c-1.9 .4-3.7-.4-3.9-1.7zm-9.1 3.2c-2.2 .2-3.7-.9-3.7-2.4c0-1.3 1.5-2.4 3.5-2.4c1.9-.2 3.7 .9 3.7 2.4c0 1.3-1.5 2.4-3.5 2.4zm-14.3-2.2c-1.9-.4-3.2-1.9-2.8-3.2s2.4-1.9 4.1-1.5c2 .6 3.3 2.1 2.8 3.4c-.4 1.3-2.4 1.9-4.1 1.3zm-12.5-7.3c-1.5-1.3-1.9-3.2-.9-4.1c.9-1.1 2.8-.9 4.3 .6c1.3 1.3 1.8 3.3 .9 4.1c-.9 1.1-2.8 .9-4.3-.6zm-8.5-10c-1.1-1.5-1.1-3.2 0-3.9c1.1-.9 2.8-.2 3.7 1.3c1.1 1.5 1.1 3.3 0 4.1c-.9 .6-2.6 0-3.7-1.5zm-6.3-8.8c-1.1-1.3-1.3-2.8-.4-3.5c.9-.9 2.4-.4 3.5 .6c1.1 1.3 1.3 2.8 .4 3.5c-.9 .9-2.4 .4-3.5-.6zm-6-6.4c-1.3-.6-1.9-1.7-1.5-2.6c.4-.6 1.5-.9 2.8-.4c1.3 .7 1.9 1.8 1.5 2.6c-.4 .9-1.7 1.1-2.8 .4z"></path></svg><!-- <i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i> Font Awesome fontawesome.com -->
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3" type="button" class="version-switcher__button btn btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="listbox" aria-controls="pst-version-switcher-list-3" aria-label="Version switcher list" data-active-version-name="1.7.2 (stable)" data-active-version="1.7.2">1.7.2 (stable)</button>
+  <div id="pst-version-switcher-list-3" class="version-switcher__menu dropdown-menu list-group-flush py-0 dropdown-menu-dark" role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  <a class="dropdown-item list-group-item list-group-item-action py-1" href="https://scikit-learn.org/dev/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.8.dev0 (dev)" data-version="1.8.dev0"><span>1.8.dev0 (dev)</span></a><a class="dropdown-item list-group-item list-group-item-action py-1 active" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.7.2 (stable)" data-version="1.7.2"><span>1.7.2 (stable)</span></a><a class="dropdown-item list-group-item list-group-item-action py-1" href="https://scikit-learn.org/1.6/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.6.1" data-version="1.6.1"><span>1.6.1</span></a><a class="dropdown-item list-group-item list-group-item-action py-1" href="https://scikit-learn.org/1.5/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.5.2" data-version="1.5.2"><span>1.5.2</span></a><a class="dropdown-item list-group-item list-group-item-action py-1" href="https://scikit-learn.org/1.4/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.4.2" data-version="1.4.2"><span>1.4.2</span></a><a class="dropdown-item list-group-item list-group-item-action py-1" href="https://scikit-learn.org/1.3/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.3.2" data-version="1.3.2"><span>1.3.2</span></a><a class="dropdown-item list-group-item list-group-item-action py-1" href="https://scikit-learn.org/1.2/auto_examples/linear_model/plot_ols_ridge.html" role="option" data-version-name="1.2.2" data-version="1.2.2"><span>1.2.2</span></a></div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/release_highlights/index.html">Release Highlights</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/release_highlights/plot_release_highlights_1_7_0.html">Release Highlights for scikit-learn 1.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/release_highlights/plot_release_highlights_1_6_0.html">Release Highlights for scikit-learn 1.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/release_highlights/plot_release_highlights_1_5_0.html">Release Highlights for scikit-learn 1.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/release_highlights/plot_release_highlights_1_4_0.html">Release Highlights for scikit-learn 1.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/release_highlights/plot_release_highlights_1_3_0.html">Release Highlights for scikit-learn 1.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/release_highlights/plot_release_highlights_1_2_0.html">Release Highlights for scikit-learn 1.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/release_highlights/plot_release_highlights_1_1_0.html">Release Highlights for scikit-learn 1.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/release_highlights/plot_release_highlights_1_0_0.html">Release Highlights for scikit-learn 1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/release_highlights/plot_release_highlights_0_24_0.html">Release Highlights for scikit-learn 0.24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/release_highlights/plot_release_highlights_0_23_0.html">Release Highlights for scikit-learn 0.23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/release_highlights/plot_release_highlights_0_22_0.html">Release Highlights for scikit-learn 0.22</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/bicluster/index.html">Biclustering</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/bicluster/plot_spectral_biclustering.html">A demo of the Spectral Biclustering algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/bicluster/plot_spectral_coclustering.html">A demo of the Spectral Co-Clustering algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/bicluster/plot_bicluster_newsgroups.html">Biclustering documents with the Spectral Co-clustering algorithm</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/calibration/index.html">Calibration</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/calibration/plot_compare_calibration.html">Comparison of Calibration of Classifiers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html">Probability Calibration curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_multiclass.html">Probability Calibration for 3-class classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration.html">Probability calibration of classifiers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/classification/index.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html">Classifier comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/classification/plot_lda_qda.html">Linear and Quadratic Discriminant Analysis with covariance ellipsoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/classification/plot_lda.html">Normal, Ledoit-Wolf and OAS Linear Discriminant Analysis for classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/classification/plot_classification_probability.html">Plot classification probability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/classification/plot_digits_classification.html">Recognizing hand-written digits</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/index.html">Clustering</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_digits.html">A demo of K-Means clustering on the handwritten digits data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_coin_ward_segmentation.html">A demo of structured Ward hierarchical clustering on an image of coins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_mean_shift.html">A demo of the mean-shift clustering algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_adjusted_for_chance_measures.html">Adjustment for chance in clustering performance evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_agglomerative_clustering.html">Agglomerative clustering with and without structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_agglomerative_clustering_metrics.html">Agglomerative clustering with different metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_plusplus.html">An example of K-Means++ initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_bisect_kmeans.html">Bisecting K-Means and Regular K-Means Performance Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_birch_vs_minibatchkmeans.html">Compare BIRCH and MiniBatchKMeans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_cluster_comparison.html">Comparing different clustering algorithms on toy datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_linkage_comparison.html">Comparing different hierarchical linkage methods on toy datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_mini_batch_kmeans.html">Comparison of the K-Means and MiniBatchKMeans clustering algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_dbscan.html">Demo of DBSCAN clustering algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_hdbscan.html">Demo of HDBSCAN clustering algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_optics.html">Demo of OPTICS clustering algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_affinity_propagation.html">Demo of affinity propagation clustering algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_assumptions.html">Demonstration of k-means assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_stability_low_dim_dense.html">Empirical evaluation of the impact of k-means initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_digits_agglomeration.html">Feature agglomeration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_feature_agglomeration_vs_univariate_selection.html">Feature agglomeration vs. univariate selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_ward_structured_vs_unstructured.html">Hierarchical clustering: structured vs unstructured ward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_inductive_clustering.html">Inductive Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_dict_face_patches.html">Online learning of a dictionary of parts of faces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_agglomerative_dendrogram.html">Plot Hierarchical Clustering Dendrogram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_coin_segmentation.html">Segmenting the picture of greek coins in regions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html">Selecting the number of clusters with silhouette analysis on KMeans clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_segmentation_toy.html">Spectral clustering for image segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_digits_linkage.html">Various Agglomerative Clustering on a 2D embedding of digits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_face_compress.html">Vector Quantization Example</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/covariance/index.html">Covariance estimation</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/covariance/plot_lw_vs_oas.html">Ledoit-Wolf vs OAS estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/covariance/plot_mahalanobis_distances.html">Robust covariance estimation and Mahalanobis distances relevance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/covariance/plot_robust_vs_empirical_covariance.html">Robust vs Empirical covariance estimate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/covariance/plot_covariance_estimation.html">Shrinkage covariance estimation: LedoitWolf vs OAS and max-likelihood</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/covariance/plot_sparse_cov.html">Sparse inverse covariance estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cross_decomposition/index.html">Cross decomposition</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cross_decomposition/plot_compare_cross_decomposition.html">Compare cross decomposition methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/cross_decomposition/plot_pcr_vs_pls.html">Principal Component Regression vs Partial Least Squares Regression</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/datasets/index.html">Dataset examples</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/datasets/plot_random_multilabel_dataset.html">Plot randomly generated multilabel dataset</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/tree/index.html">Decision Trees</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/tree/plot_tree_regression.html">Decision Tree Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/tree/plot_iris_dtc.html">Plot the decision surface of decision trees trained on the iris dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/tree/plot_cost_complexity_pruning.html">Post pruning decision trees with cost complexity pruning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/tree/plot_unveil_tree_structure.html">Understanding the decision tree structure</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/decomposition/index.html">Decomposition</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_ica_blind_source_separation.html">Blind source separation using FastICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_pca_vs_lda.html">Comparison of LDA and PCA 2D projection of Iris dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">Faces dataset decompositions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_varimax_fa.html">Factor Analysis (with rotation) to visualize patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_ica_vs_pca.html">FastICA on 2D point clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_image_denoising.html">Image denoising using dictionary learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_incremental_pca.html">Incremental PCA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_kernel_pca.html">Kernel PCA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_pca_vs_fa_model_selection.html">Model selection with Probabilistic PCA and Factor Analysis (FA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_pca_iris.html">Principal Component Analysis (PCA) on Iris Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_sparse_coding.html">Sparse coding with a precomputed dictionary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/developing_estimators/index.html">Developing Estimators</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/developing_estimators/sklearn_is_fitted.html"><code class="docutils literal notranslate"><span class="pre">__sklearn_is_fitted__</span></code> as Developer API</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/index.html">Ensemble methods</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_gradient_boosting_categorical.html">Categorical Feature Support in Gradient Boosting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_stack_predictors.html">Combine predictors using stacking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_hist_grad_boosting_comparison.html">Comparing Random Forests and Histogram Gradient Boosting models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_random_forest_regression_multioutput.html">Comparing random forests and the multi-output meta estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_adaboost_regression.html">Decision Tree Regression with AdaBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_gradient_boosting_early_stopping.html">Early stopping in Gradient Boosting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html">Feature importances with a forest of trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_feature_transformation.html">Feature transformations with ensembles of trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_hgbt_regression.html">Features in Histogram Gradient Boosting Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_gradient_boosting_oob.html">Gradient Boosting Out-of-Bag estimates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_gradient_boosting_regression.html">Gradient Boosting regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_gradient_boosting_regularization.html">Gradient Boosting regularization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_random_forest_embedding.html">Hashing feature transformation using Totally Random Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_isolation_forest.html">IsolationForest example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_monotonic_constraints.html">Monotonic Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_adaboost_multiclass.html">Multi-class AdaBoosted Decision Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_ensemble_oob.html">OOB Errors for Random Forests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_voting_regressor.html">Plot individual and voting regression predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_iris.html">Plot the decision surfaces of ensembles of trees on the iris dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_gradient_boosting_quantile.html">Prediction Intervals for Gradient Boosting Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_bias_variance.html">Single estimator versus bagging: bias-variance decomposition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_adaboost_twoclass.html">Two-class AdaBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_voting_decision_regions.html">Visualizing the probabilistic predictions of a VotingClassifier</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/index.html">Examples based on real world datasets</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/plot_tomography_l1_reconstruction.html">Compressive sensing: tomography reconstruction with L1 prior (Lasso)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/plot_prediction_latency.html">Prediction Latency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/plot_species_distribution_modeling.html">Species distribution modeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/plot_cyclical_feature_engineering.html">Time-related feature engineering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/plot_topics_extraction_with_nmf_lda.html">Topic extraction with Non-negative Matrix Factorization and Latent Dirichlet Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/plot_stock_market.html">Visualizing the stock market structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/applications/wikipedia_principal_eigenvector.html">Wikipedia principal eigenvector</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/feature_selection/index.html">Feature Selection</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/feature_selection/plot_f_test_vs_mi.html">Comparison of F-test and mutual information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/feature_selection/plot_select_from_model_diabetes.html">Model-based and sequential feature selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/feature_selection/plot_feature_selection_pipeline.html">Pipeline ANOVA SVM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/feature_selection/plot_rfe_digits.html">Recursive feature elimination</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/feature_selection/plot_rfe_with_cross_validation.html">Recursive feature elimination with cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/feature_selection/plot_feature_selection.html">Univariate Feature Selection</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/frozen/index.html">Frozen Estimators</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/frozen/plot_frozen_examples.html">Examples of Using <code class="docutils literal notranslate"><span class="pre">FrozenEstimator</span></code></a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/mixture/index.html">Gaussian Mixture Models</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/mixture/plot_concentration_prior.html">Concentration Prior Type Analysis of Variation Bayesian Gaussian Mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/mixture/plot_gmm_pdf.html">Density Estimation for a Gaussian mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/mixture/plot_gmm_init.html">GMM Initialization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/mixture/plot_gmm_covariances.html">GMM covariances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/mixture/plot_gmm.html">Gaussian Mixture Model Ellipsoids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/mixture/plot_gmm_selection.html">Gaussian Mixture Model Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/mixture/plot_gmm_sin.html">Gaussian Mixture Model Sine Curve</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/gaussian_process/index.html">Gaussian Process for Machine Learning</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/gaussian_process/plot_gpr_noisy.html">Ability of Gaussian process regression (GPR) to estimate data noise-level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/gaussian_process/plot_compare_gpr_krr.html">Comparison of kernel ridge and Gaussian process regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/gaussian_process/plot_gpr_co2.html">Forecasting of CO2 level on Mona Loa dataset using Gaussian process regression (GPR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/gaussian_process/plot_gpr_noisy_targets.html">Gaussian Processes regression: basic introductory example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/gaussian_process/plot_gpc_iris.html">Gaussian process classification (GPC) on iris dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/gaussian_process/plot_gpr_on_structured_data.html">Gaussian processes on discrete data structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/gaussian_process/plot_gpc_xor.html">Illustration of Gaussian process classification (GPC) on the XOR dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/gaussian_process/plot_gpr_prior_posterior.html">Illustration of prior and posterior Gaussian process for different kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/gaussian_process/plot_gpc_isoprobability.html">Iso-probability lines for Gaussian Processes classification (GPC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/gaussian_process/plot_gpc.html">Probabilistic predictions with Gaussian process classification (GPC)</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/index.html">Generalized Linear Models</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ard.html">Comparing Linear Bayesian Regressors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_bayesian_ridge_curvefit.html">Curve Fitting with Bayesian Ridge Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_logistic_multinomial.html">Decision Boundaries of Multinomial and One-vs-Rest Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_sgd_early_stopping.html">Early stopping of Stochastic Gradient Descent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_elastic_net_precomputed_gram_matrix_with_weighted_samples.html">Fitting an Elastic Net with a precomputed Gram Matrix and Weighted Samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_huber_vs_ridge.html">HuberRegressor vs Ridge on dataset with strong outliers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_multi_task_lasso_support.html">Joint feature selection with multi-task Lasso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_logistic_l1_l2_sparsity.html">L1 Penalty and Sparsity in Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_lasso_and_elasticnet.html">L1-based models for Sparse Signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_lasso_lars_ic.html">Lasso model selection via information criteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_lasso_model_selection.html">Lasso model selection: AIC-BIC / cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_lasso_dense_vs_sparse_data.html">Lasso on dense and sparse data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_lasso_lasso_lars_elasticnet_path.html">Lasso, Lasso-LARS, and Elastic Net paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_logistic.html">Logistic function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_sparse_logistic_regression_mnist.html">MNIST classification using multinomial logistic + L1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_sparse_logistic_regression_20newsgroups.html">Multiclass sparse logistic regression on 20newgroups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_nnls.html">Non-negative least squares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_sgdocsvm_vs_ocsvm.html">One-Class SVM versus One-Class SVM using Stochastic Gradient Descent</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#">Ordinary Least Squares and Ridge Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_omp.html">Orthogonal Matching Pursuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ridge_path.html">Plot Ridge coefficients as a function of the regularization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_sgd_iris.html">Plot multi-class SGD on the iris dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_poisson_regression_non_normal_loss.html">Poisson regression and non-normal loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_polynomial_interpolation.html">Polynomial and Spline interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_quantile_regression.html">Quantile regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_logistic_path.html">Regularization path of L1- Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ridge_coeffs.html">Ridge coefficients as a function of the L2 Regularization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_robust_fit.html">Robust linear estimator fitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ransac.html">Robust linear model estimation using RANSAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_sgd_separating_hyperplane.html">SGD: Maximum margin separating hyperplane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_sgd_penalties.html">SGD: Penalties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_sgd_weighted_samples.html">SGD: Weighted samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_sgd_loss_functions.html">SGD: convex loss functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_theilsen.html">Theil-Sen Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_tweedie_regression_insurance_claims.html">Tweedie regression on insurance claims</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/inspection/index.html">Inspection</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/inspection/plot_linear_model_coefficient_interpretation.html">Common pitfalls in the interpretation of coefficients of linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/inspection/plot_causal_interpretation.html">Failure of Machine Learning to infer causal effects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/inspection/plot_partial_dependence.html">Partial Dependence and Individual Conditional Expectation Plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/inspection/plot_permutation_importance.html">Permutation Importance vs Random Forest Feature Importance (MDI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/inspection/plot_permutation_importance_multicollinear.html">Permutation Importance with Multicollinear or Correlated Features</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/kernel_approximation/index.html">Kernel Approximation</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/kernel_approximation/plot_scalable_poly_kernels.html">Scalable learning with polynomial kernel approximation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/manifold/index.html">Manifold learning</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/manifold/plot_compare_methods.html">Comparison of Manifold Learning methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/manifold/plot_manifold_sphere.html">Manifold Learning methods on a severed sphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/manifold/plot_lle_digits.html">Manifold learning on handwritten digits: Locally Linear Embedding, Isomap…</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/manifold/plot_mds.html">Multi-dimensional scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/manifold/plot_swissroll.html">Swiss Roll And Swiss-Hole Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/manifold/plot_t_sne_perplexity.html">t-SNE: The effect of various perplexity values on the shape</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/index.html">Miscellaneous</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_partial_dependence_visualization_api.html">Advanced Plotting With Partial Dependence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_anomaly_comparison.html">Comparing anomaly detection algorithms for outlier detection on toy datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_kernel_ridge_regression.html">Comparison of kernel ridge regression and SVR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_pipeline_display.html">Displaying Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_estimator_representation.html">Displaying estimators and complex pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_outlier_detection_bench.html">Evaluation of outlier detection estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_kernel_approximation.html">Explicit feature map approximation for RBF kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_multioutput_face_completion.html">Face completion with a multi-output estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_set_output.html">Introducing the <code class="docutils literal notranslate"><span class="pre">set_output</span></code> API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_isotonic_regression.html">Isotonic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_metadata_routing.html">Metadata Routing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_multilabel.html">Multilabel classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_roc_curve_visualization_api.html">ROC Curve with Visualization API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_johnson_lindenstrauss_bound.html">The Johnson-Lindenstrauss bound for embedding with random projections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_display_object_visualization.html">Visualizations with Display Objects</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/impute/index.html">Missing Value Imputation</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/impute/plot_missing_values.html">Imputing missing values before building an estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/impute/plot_iterative_imputer_variants_comparison.html">Imputing missing values with variants of IterativeImputer</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/index.html">Model Selection</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_refit_callable.html">Balance model complexity and cross-validated score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_likelihood_ratios.html">Class Likelihood Ratios to measure classification performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_randomized_search.html">Comparing randomized search and grid search for hyperparameter estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_successive_halving_heatmap.html">Comparison between grid search and successive halving</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html">Confusion matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_digits.html">Custom refit strategy of a grid search with cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_multi_metric_evaluation.html">Demonstration of multi-metric evaluation on cross_val_score and GridSearchCV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_det.html">Detection error tradeoff (DET) curve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_train_error_vs_test_error.html">Effect of model regularization on training and test error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html">Multiclass Receiver Operating Characteristic (ROC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_nested_cross_validation_iris.html">Nested versus non-nested cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html">Precision-Recall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_stats.html">Statistical comparison of models using grid search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_successive_halving_iterations.html">Successive Halving Iterations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_permutation_tests_for_classification.html">Test with permutations the significance of a classification score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html">Underfitting vs. Overfitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_cv_indices.html">Visualizing cross-validation behavior in scikit-learn</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/multiclass/index.html">Multiclass methods</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/multiclass/plot_multiclass_overview.html">Overview of multiclass training meta-estimators</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/multioutput/index.html">Multioutput methods</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/multioutput/plot_classifier_chain_yeast.html">Multilabel classification using a classifier chain</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/index.html">Nearest Neighbors</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/approximate_nearest_neighbors.html">Approximate nearest neighbors in TSNE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_caching_nearest_neighbors.html">Caching nearest neighbors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_nca_classification.html">Comparing Nearest Neighbors with and without Neighborhood Components Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_nca_dim_reduction.html">Dimensionality Reduction with Neighborhood Components Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_species_kde.html">Kernel Density Estimate of Species Distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_digits_kde_sampling.html">Kernel Density Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_nearest_centroid.html">Nearest Centroid Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_classification.html">Nearest Neighbors Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_regression.html">Nearest Neighbors regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_nca_illustration.html">Neighborhood Components Analysis Illustration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_lof_novelty_detection.html">Novelty detection with Local Outlier Factor (LOF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_lof_outlier_detection.html">Outlier detection with Local Outlier Factor (LOF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_kde_1d.html">Simple 1D Kernel Density Estimation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neural_networks/index.html">Neural Networks</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neural_networks/plot_mlp_training_curves.html">Compare Stochastic learning strategies for MLPClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neural_networks/plot_rbm_logistic_classification.html">Restricted Boltzmann Machine features for digit classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neural_networks/plot_mlp_alpha.html">Varying regularization in Multi-layer Perceptron</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/neural_networks/plot_mnist_filters.html">Visualization of MLP weights on MNIST</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/compose/index.html">Pipelines and composite estimators</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/compose/plot_column_transformer.html">Column Transformer with Heterogeneous Data Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/compose/plot_column_transformer_mixed_types.html">Column Transformer with Mixed Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/compose/plot_feature_union.html">Concatenating multiple feature extraction methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/compose/plot_transformed_target.html">Effect of transforming the targets in regression model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/compose/plot_digits_pipe.html">Pipelining: chaining a PCA and a logistic regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/compose/plot_compare_reduction.html">Selecting dimensionality reduction with Pipeline and GridSearchCV</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/preprocessing/index.html">Preprocessing</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html">Compare the effect of different scalers on data with outliers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/preprocessing/plot_target_encoder.html">Comparing Target Encoder with Other Encoders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/preprocessing/plot_discretization_strategies.html">Demonstrating the different strategies of KBinsDiscretizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/preprocessing/plot_discretization_classification.html">Feature discretization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/preprocessing/plot_scaling_importance.html">Importance of Feature Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/preprocessing/plot_map_data_to_normal.html">Map data to a normal distribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/preprocessing/plot_target_encoder_cross_val.html">Target Encoder’s Internal Cross fitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/preprocessing/plot_discretization.html">Using KBinsDiscretizer to discretize continuous features</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/semi_supervised/index.html">Semi Supervised Classification</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/semi_supervised/plot_semi_supervised_versus_svm_iris.html">Decision boundary of semi-supervised classifiers versus SVM on the Iris dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/semi_supervised/plot_self_training_varying_threshold.html">Effect of varying threshold for self-training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/semi_supervised/plot_label_propagation_structure.html">Label Propagation circles: Learning a complex structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/semi_supervised/plot_label_propagation_digits_active_learning.html">Label Propagation digits: Active learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/semi_supervised/plot_label_propagation_digits.html">Label Propagation digits: Demonstrating performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/semi_supervised/plot_semi_supervised_newsgroups.html">Semi-supervised Classification on a Text Dataset</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/index.html">Support Vector Machines</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_oneclass.html">One-class SVM with non-linear kernel (RBF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_svm_kernels.html">Plot classification boundaries with different SVM Kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_iris_svc.html">Plot different SVM classifiers in the iris dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_linearsvc_support_vectors.html">Plot the support vectors in LinearSVC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_rbf_parameters.html">RBF SVM parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_svm_margin.html">SVM Margins Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_svm_tie_breaking.html">SVM Tie Breaking Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_custom_kernel.html">SVM with custom kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_svm_anova.html">SVM-Anova: SVM with univariate feature selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_separating_hyperplane.html">SVM: Maximum margin separating hyperplane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_separating_hyperplane_unbalanced.html">SVM: Separating hyperplane for unbalanced classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_weighted_samples.html">SVM: Weighted samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_svm_scale_c.html">Scaling the regularization parameter for SVCs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/svm/plot_svm_regression.html">Support Vector Regression (SVR) using linear and non-linear kernels</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/text/index.html">Working with text documents</a><details><summary><span class="toctree-toggle" role="presentation"><svg class="svg-inline--fa fa-chevron-down" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg><!-- <i class="fa-solid fa-chevron-down"></i> Font Awesome fontawesome.com --></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/text/plot_document_classification_20newsgroups.html">Classification of text documents using sparse features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/text/plot_document_clustering.html">Clustering text documents using k-means</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/text/plot_hashing_vs_dict_vectorizer.html">FeatureHasher and DictVectorizer Comparison</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="https://scikit-learn.org/stable/index.html" class="nav-link" aria-label="Home">
+        <svg class="svg-inline--fa fa-house" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="house" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"></path></svg><!-- <i class="fa-solid fa-home"></i> Font Awesome fontawesome.com -->
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="https://scikit-learn.org/stable/auto_examples/index.html" class="nav-link">Examples</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="https://scikit-learn.org/stable/auto_examples/linear_model/index.html" class="nav-link">Generalized Linear Models</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Ordinary Least Squares and Ridge Regression</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#sphx-glr-download-auto-examples-linear-model-plot-ols-ridge-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code. or to run this example in your browser via JupyterLite or Binder</p>
+</div>
+<section class="sphx-glr-example-title" id="ordinary-least-squares-and-ridge-regression">
+<span id="sphx-glr-auto-examples-linear-model-plot-ols-ridge-py"></span><h1>Ordinary Least Squares and Ridge Regression<a class="headerlink" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#ordinary-least-squares-and-ridge-regression" title="Link to this heading">#</a></h1>
+<ol class="arabic simple">
+<li><p>Ordinary Least Squares:
+We illustrate how to use the ordinary least squares (OLS) model,
+<a class="reference internal" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearRegression</span></code></a>, on a single feature of
+the diabetes dataset. We train on a subset of the data, evaluate on a
+test set, and visualize the predictions.</p></li>
+<li><p>Ordinary Least Squares and Ridge Regression Variance:
+We then show how OLS can have high variance when the data is sparse or
+noisy, by fitting on a very small synthetic sample repeatedly. Ridge
+regression, <a class="reference internal" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Ridge</span></code></a>, reduces this variance
+by penalizing (shrinking) the coefficients, leading to more stable
+predictions.</p></li>
+</ol>
+<div class="highlight-Python notranslate"><div class="highlight"><pre id="codecell0" tabindex="-1"><span></span><span class="c1"># Authors: The scikit-learn developers</span>
+<span class="c1"># SPDX-License-Identifier: BSD-3-Clause</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell0">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<section id="data-loading-and-preparation">
+<h2>Data Loading and Preparation<a class="headerlink" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#data-loading-and-preparation" title="Link to this heading">#</a></h2>
+<p>Load the diabetes dataset. For simplicity, we only keep a single feature in the data.
+Then, we split the data and target into training and test sets.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre id="codecell1" tabindex="0"><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_diabetes.html#sklearn.datasets.load_diabetes" title="sklearn.datasets.load_diabetes" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">load_diabetes</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_diabetes.html#sklearn.datasets.load_diabetes" title="sklearn.datasets.load_diabetes" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">load_diabetes</span></a><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">2</span><span class="p">]]</span>  <span class="c1"># Use only one feature</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell1">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+</section>
+<section id="linear-regression-model">
+<h2>Linear regression model<a class="headerlink" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#linear-regression-model" title="Link to this heading">#</a></h2>
+<p>We create a linear regression model and fit it on the training data. Note that by
+default, an intercept is added to the model. We can control this behavior by setting
+the <code class="docutils literal notranslate"><span class="pre">fit_intercept</span></code> parameter.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre id="codecell2" tabindex="-1"><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearRegression</span></a>
+
+<span class="n">regressor</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearRegression</span></a><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+</section>
+<section id="model-evaluation">
+<h2>Model evaluation<a class="headerlink" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#model-evaluation" title="Link to this heading">#</a></h2>
+<p>We evaluate the model’s performance on the test set using the mean squared error
+and the coefficient of determination.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre id="codecell3" tabindex="-1"><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error" title="sklearn.metrics.mean_squared_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_squared_error</span></a><span class="p">,</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score" title="sklearn.metrics.r2_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">r2_score</span></a>
+
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Mean squared error: </span><span class="si">{</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error" title="sklearn.metrics.mean_squared_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_squared_error</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Coefficient of determination: </span><span class="si">{</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score" title="sklearn.metrics.r2_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">r2_score</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell3">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre id="codecell4" tabindex="-1"><span></span>Mean squared error: 2548.07
+Coefficient of determination: 0.47
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+</section>
+<section id="plotting-the-results">
+<h2>Plotting the results<a class="headerlink" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#plotting-the-results" title="Link to this heading">#</a></h2>
+<p>Finally, we visualize the results on the train and test data.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre id="codecell5" tabindex="0"><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Train data points"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">X_train</span><span class="p">,</span>
+    <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"tab:orange"</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"Model predictions"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"Feature"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Target"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Train set"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Test data points"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:orange"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Model predictions"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"Feature"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Target"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Test set"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"Linear Regression"</span><span class="p">)</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell5">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<img src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sphx_glr_plot_ols_ridge_001.png" srcset="../../_images/sphx_glr_plot_ols_ridge_001.png" alt="Linear Regression, Train set, Test set" class="sphx-glr-single-img"><p>OLS on this single-feature subset learns a linear function that minimizes
+the mean squared error on the training data. We can see how well (or poorly)
+it generalizes by looking at the R^2 score and mean squared error on the
+test set. In higher dimensions, pure OLS often overfits, especially if the
+data is noisy. Regularization techniques (like Ridge or Lasso) can help
+reduce that.</p>
+</section>
+<section id="ordinary-least-squares-and-ridge-regression-variance">
+<h2>Ordinary Least Squares and Ridge Regression Variance<a class="headerlink" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#ordinary-least-squares-and-ridge-regression-variance" title="Link to this heading">#</a></h2>
+<p>Next, we illustrate the problem of high variance more clearly by using
+a tiny synthetic dataset. We sample only two data points, then repeatedly
+add small Gaussian noise to them and refit both OLS and Ridge. We plot
+each new line to see how much OLS can jump around, whereas Ridge remains
+more stable thanks to its penalty term.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre id="codecell6" tabindex="-1"><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">linear_model</span>
+
+<span class="n">X_train</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.c_.html#numpy.c_" title="numpy.c_" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">c_</span></a><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">X_test</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.c_.html#numpy.c_" title="numpy.c_" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">c_</span></a><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+
+<a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">classifiers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">ols</span><span class="o">=</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">linear_model</span><span class="o">.</span><span class="n">LinearRegression</span></a><span class="p">(),</span> <span class="n">ridge</span><span class="o">=</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">linear_model</span><span class="o">.</span><span class="n">Ridge</span></a><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">clf</span> <span class="ow">in</span> <span class="n">classifiers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+        <span class="n">this_X</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.normal.html#numpy.random.normal" title="numpy.random.normal" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span></a><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">X_train</span>
+        <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">this_X</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">this_X</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"blue"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">"red"</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"X"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y"</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell6">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sphx_glr_plot_ols_ridge_002.png" srcset="../../_images/sphx_glr_plot_ols_ridge_002.png" alt="ols" class="sphx-glr-multi-img"></li>
+<li><img src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sphx_glr_plot_ols_ridge_003.png" srcset="../../_images/sphx_glr_plot_ols_ridge_003.png" alt="ridge" class="sphx-glr-multi-img"></li>
+</ul>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#conclusion" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>In the first example, we applied OLS to a real dataset, showing
+how a plain linear model can fit the data by minimizing the squared error
+on the training set.</p></li>
+<li><p>In the second example, OLS lines varied drastically each time noise
+was added, reflecting its high variance when data is sparse or noisy. By
+contrast, <strong>Ridge</strong> regression introduces a regularization term that shrinks
+the coefficients, stabilizing predictions.</p></li>
+</ul>
+<p>Techniques like <a class="reference internal" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Ridge</span></code></a> or
+<a class="reference internal" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html#sklearn.linear_model.Lasso" title="sklearn.linear_model.Lasso"><code class="xref py py-class docutils literal notranslate"><span class="pre">Lasso</span></code></a> (which applies an L1 penalty) are both
+common ways to improve generalization and reduce overfitting. A well-tuned
+Ridge or Lasso often outperforms pure OLS when features are correlated, data
+is noisy, or sample size is small.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.429 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-linear-model-plot-ols-ridge-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.7.X?urlpath=lab/tree/notebooks/auto_examples/linear_model/plot_ols_ridge.ipynb"><img alt="Launch binder" src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/binder_badge_logo18.svg" style="width: 150px;">
+</a>
+</div>
+<div class="lite-badge docutils container">
+<a class="reference external image-reference" href="https://scikit-learn.org/stable/lite/lab/index.html?path=auto_examples/linear_model/plot_ols_ridge.ipynb"><img alt="Launch JupyterLite" src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/jupyterlite_badge_logo18.svg" style="width: 150px;">
+</a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="https://scikit-learn.org/stable/_downloads/fef48f5bfe3b15126ce6aefe6c0149fc/plot_ols_ridge.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_ols_ridge.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="https://scikit-learn.org/stable/_downloads/f0074aca289f62d3b8d12fcab4911dd3/plot_ols_ridge.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_ols_ridge.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="https://scikit-learn.org/stable/_downloads/02192f99342d6d1323161978b6c80bfc/plot_ols_ridge.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_ols_ridge.zip</span></code></a></p>
+</div>
+</div>
+<p class="rubric">Related examples</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="In this example, we fit a linear model with positive constraints on the regression coefficients and compare the estimated coefficients to a classic linear regression."><img alt="" src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sphx_glr_plot_nnls_thumb.png">
+<p><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_nnls.html#sphx-glr-auto-examples-linear-model-plot-nnls-py"><span class="std std-ref">Non-negative least squares</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Non-negative least squares</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Shows the effect of collinearity in the coefficients of an estimator."><img alt="" src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sphx_glr_plot_ridge_path_thumb.png">
+<p><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ridge_path.html#sphx-glr-auto-examples-linear-model-plot-ridge-path-py"><span class="std std-ref">Plot Ridge coefficients as a function of the regularization</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Plot Ridge coefficients as a function of the regularization</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Shown in the plot is how the logistic regression would, in this synthetic dataset, classify values as either 0 or 1, i.e. class one or two, using the logistic curve."><img alt="" src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sphx_glr_plot_logistic_thumb.png">
+<p><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_logistic.html#sphx-glr-auto-examples-linear-model-plot-logistic-py"><span class="std std-ref">Logistic function</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Logistic function</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Fit Ridge and HuberRegressor on a dataset with outliers."><img alt="" src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/sphx_glr_plot_huber_vs_ridge_thumb.png">
+<p><a class="reference internal" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_huber_vs_ridge.html#sphx-glr-auto-examples-linear-model-plot-huber-vs-ridge-py"><span class="std std-ref">HuberRegressor vs Ridge on dataset with strong outliers</span></a></p>
+  <div class="sphx-glr-thumbnail-title">HuberRegressor vs Ridge on dataset with strong outliers</div>
+</div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io/">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  <div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item">
+<div class="prev-next-area">
+    <a class="left-prev" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_sgdocsvm_vs_ocsvm.html" title="previous page">
+      <svg class="svg-inline--fa fa-angle-left" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg><!-- <i class="fa-solid fa-angle-left"></i> Font Awesome fontawesome.com -->
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">One-Class SVM versus One-Class SVM using Stochastic Gradient Descent</p>
+      </div>
+    </a>
+    <a class="right-next" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_omp.html" title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Orthogonal Matching Pursuit</p>
+      </div>
+      <svg class="svg-inline--fa fa-angle-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"></path></svg><!-- <i class="fa-solid fa-angle-right"></i> Font Awesome fontawesome.com -->
+    </a>
+</div></div>
+  
+</div>
+                </footer>
+              
+              
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div id="pst-page-navigation-heading-2" class="page-toc tocsection onthispage">
+    <svg class="svg-inline--fa fa-list" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="list" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"></path></svg><!-- <i class="fa-solid fa-list"></i> Font Awesome fontawesome.com --> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#data-loading-and-preparation">Data Loading and Preparation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#linear-regression-model">Linear regression model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#model-evaluation">Model evaluation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#plotting-the-results">Plotting the results</a></li>
+<li class="toc-h2 nav-item toc-entry active"><a class="reference internal nav-link active" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#ordinary-least-squares-and-ridge-regression-variance">Ordinary Least Squares and Ridge Regression Variance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols_ridge.html#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="https://scikit-learn.org/stable/_sources/auto_examples/linear_model/plot_ols_ridge.rst.txt" rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+  <div class="sidebar-secondary-item">
+
+
+  <div class="sphx-glr-sidebar-component">
+    
+      
+        <div class="sphx-glr-sidebar-item sphx-glr-download-python-sidebar" title="plot_ols_ridge.py">
+          <a download="" href="https://scikit-learn.org/stable/_downloads/f0074aca289f62d3b8d12fcab4911dd3/plot_ols_ridge.py">
+            <svg class="svg-inline--fa fa-download" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="download" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"></path></svg><!-- <i class="fa-solid fa-download"></i> Font Awesome fontawesome.com -->
+            Download source code
+          </a>
+        </div>
+      
+    
+      
+        <div class="sphx-glr-sidebar-item sphx-glr-download-jupyter-sidebar" title="plot_ols_ridge.ipynb">
+          <a download="" href="https://scikit-learn.org/stable/_downloads/fef48f5bfe3b15126ce6aefe6c0149fc/plot_ols_ridge.ipynb">
+            <svg class="svg-inline--fa fa-download" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="download" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"></path></svg><!-- <i class="fa-solid fa-download"></i> Font Awesome fontawesome.com -->
+            Download Jupyter notebook
+          </a>
+        </div>
+      
+    
+      
+        <div class="sphx-glr-sidebar-item sphx-glr-download-zip-sidebar" title="plot_ols_ridge.zip">
+          <a download="" href="https://scikit-learn.org/stable/_downloads/02192f99342d6d1323161978b6c80bfc/plot_ols_ridge.zip">
+            <svg class="svg-inline--fa fa-download" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="download" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"></path></svg><!-- <i class="fa-solid fa-download"></i> Font Awesome fontawesome.com -->
+            Download zipped
+          </a>
+        </div>
+      
+    
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+
+
+  <div class="sphx-glr-sidebar-component">
+    
+      
+        <div class="sphx-glr-sidebar-item lite-badge-sidebar">
+          <a href="https://scikit-learn.org/stable/lite/lab/index.html?path=auto_examples/linear_model/plot_ols_ridge.ipynb">
+            <img src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/jupyterlite_badge_logo18.svg" alt="Launch JupyterLite">
+          </a>
+        </div>
+      
+    
+      
+        <div class="sphx-glr-sidebar-item binder-badge-sidebar">
+          <a href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.7.X?urlpath=lab/tree/notebooks/auto_examples/linear_model/plot_ols_ridge.ipynb">
+            <img src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/binder_badge_logo18.svg" alt="Launch binder">
+          </a>
+        </div>
+      
+    
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer="" src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/bootstrap.js"></script>
+<script defer="" src="./Ordinary Least Squares and Ridge Regression — scikit-learn 1.7.2 documentation_files/pydata-sphinx-theme.js"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2007 - 2025, scikit-learn developers (BSD License).
+      <br>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+  
+</body></html>
